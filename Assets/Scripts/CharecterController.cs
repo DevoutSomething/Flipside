@@ -9,7 +9,7 @@ public class CharecterController : MonoBehaviour
     public float moveSpeed;
     public float acceleration;
     public float decceleration;
-    public float vellocityPoweer;
+    public float velocityPoweer;
     public float friction;
 
     [Header("Jump")]
@@ -17,7 +17,7 @@ public class CharecterController : MonoBehaviour
     public float jumpCut;
     public float CoyoteTime;
     public float jumpBuffer;
-    public float baseGravitiyMultiplier;
+    public float gravityScale;
     public float GravityMultiplier;
 
     [Header("Checks")]
@@ -33,7 +33,6 @@ public class CharecterController : MonoBehaviour
     private float lastJumpTime;
     private bool isJumping;
     private bool jumpReleased;
-    private float gravityScale;
     //[Header("Private Variables")]
     
 
@@ -48,6 +47,7 @@ public class CharecterController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping)
         {
             Jump();
+            Debug.Log("AttemptJump");
         }
         if(isJumping && Input.GetButtonUp("Jump"))
         {
@@ -61,7 +61,7 @@ public class CharecterController : MonoBehaviour
         float speedDiff = targetSpeed - rb.velocity.x;
         //? = if statement
         float accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
-        float movement = Mathf.Pow(Mathf.Abs(speedDiff) * accelerationRate, vellocityPoweer) * Mathf.Sign(speedDiff);
+        float movement = Mathf.Pow(Mathf.Abs(speedDiff) * accelerationRate, velocityPoweer) * Mathf.Sign(speedDiff);
         rb.AddForce(movement * Vector2.right);
         #endregion
         #region Gravity
@@ -110,6 +110,7 @@ public class CharecterController : MonoBehaviour
 
     private void setGravityScale(float scale)
     {
+        Debug.Log(scale);
         rb.gravityScale = scale;
     }
 }
