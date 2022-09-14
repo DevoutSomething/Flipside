@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CharecterController : MonoBehaviour
 {
-    [Header("Movement Speed")]
+    [Header("Speed")]
     public float moveSpeed;
     public float acceleration;
     public float decceleration;
@@ -17,41 +17,52 @@ public class CharecterController : MonoBehaviour
     public float jumpCut;
     public float CoyoteTime;
     public float jumpBuffer;
-    public float baseGravitiyMultiplier;
+    public float gravityScale;
     public float GravityMultiplier;
-
+    public float jumpBufferTime;
     [Header("Checks")]
     public Transform groundCheckPoint;
     public Vector2 groundCheckSize;
     public LayerMask groundLayer;
 
-    
-    private float lastTimeGrounded;
-    private bool isGrounded;
-    private float moveDirection;
+
+    [Header("Dash")]
+    public float dashSpeed;
+
+    [Header("Private")]
+    [SerializeField] private float lastTimeGrounded;
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private float moveDirection;
     private Rigidbody2D rb;
-    private float lastJumpTime;
-    private bool isJumping;
-    private bool jumpReleased;
-    private float gravityScale;
+    [SerializeField] private bool isJumping;
+    [SerializeField] private bool hasDashed;
+
+    private BoxCollider2D boxCollider2d;
+    private float jumpBufferTemp;
     //[Header("Private Variables")]
-    
+
+
 
     private void Start()
     {
+        boxCollider2d = transform.GetComponent<BoxCollider2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         setGravityScale(gravityScale);
     }
     private void Update()
     {
         moveDirection = Input.GetAxis("Horizontal");
-        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping)
+        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0)
         {
             Jump();
         }
-        if(isJumping && Input.GetButtonUp("Jump"))
+        if (isJumping && Input.GetButtonUp("Jump"))
         {
             onJumpUp();
+        }
+        if (jumpBufferTemp >= 0)
+        {
+            jumpBufferTemp -= Time.deltaTime;
         }
     }
     private void FixedUpdate()
@@ -68,33 +79,48 @@ public class CharecterController : MonoBehaviour
         if (rb.velocity.y < 0)
         {
             setGravityScale(gravityScale * GravityMultiplier);
+            isJumping = false;
         }
         else
         {
             setGravityScale(gravityScale);
         }
         #endregion
+        #region Dashing
+        var x = Input.GetAxisRaw("Horizontal");
+        var y = Input.GetAxisRaw("Vertical");
+        if (!hasDashed && Input.GetMouseButtonDown(0))
+        {
+
+        }
+        #endregion
+
         groundCheck();
-        lastJumpTime += Time.deltaTime;
     }
     private void Jump()
     {
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        lastTimeGrounded = 0;
-        lastJumpTime = 0;
         isJumping = true;
-        jumpReleased = false;
+        jumpBufferTemp = jumpBufferTime;
     }
     private void groundCheck()
     {
-        if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer) && !isJumping)
-        {
+       RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2d.bounds.center, Vector2.down, boxCollider2d.bounds.extents.y + 0.05f, groundLayer);
+      if (raycastHit.collider != null)
+      {
+            Debug.Log(raycastHit.collider);
             lastTimeGrounded = 0;
             isGrounded = true;
-        }
+            hasDashed = false;
+      }
         else if (!isGrounded)
         {
+            Debug.Log(raycastHit.collider);
             lastTimeGrounded += Time.deltaTime;
+        }
+        else
+        {
+            isGrounded = false;
         }
     }
 
@@ -104,13 +130,16 @@ public class CharecterController : MonoBehaviour
         {
             rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCut), ForceMode2D.Impulse);
             isJumping = false;
-            lastJumpTime = 0;
         }
     }
 
     private void setGravityScale(float scale)
     {
         rb.gravityScale = scale;
+    }
+    private void Dash(float dirx, float diry)
+    {
+        
     }
 }
 
