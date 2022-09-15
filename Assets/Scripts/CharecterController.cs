@@ -37,6 +37,9 @@ public class CharecterController : MonoBehaviour
     [SerializeField] private bool isJumping;
     [SerializeField] private bool hasDashed;
 
+    [Header("set to zero")]
+    public float rotationOnJump;
+
     private BoxCollider2D boxCollider2d;
     private float jumpBufferTemp;
     //[Header("Private Variables")]
@@ -55,14 +58,25 @@ public class CharecterController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0)
         {
             Jump();
+            Debug.Log("jumped");
         }
-        if (isJumping && Input.GetButtonUp("Jump"))
+        /*else if(Input.GetButtonDown("Jump") && !isGrounded && !isJumping)
         {
-            onJumpUp();
+            jumpBufferTemp = jumpBufferTime;
         }
         if (jumpBufferTemp >= 0)
         {
             jumpBufferTemp -= Time.deltaTime;
+            if (isGrounded && lastTimeGrounded < CoyoteTime)
+            {
+                jumpBufferTemp = 0;
+                Jump();
+                Debug.Log("Jumped with buffer");
+            }
+        }*/
+        if (isJumping && Input.GetButtonUp("Jump"))
+        {
+            onJumpUp();
         }
     }
     private void FixedUpdate()
@@ -101,7 +115,17 @@ public class CharecterController : MonoBehaviour
     {
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isJumping = true;
-        jumpBufferTemp = jumpBufferTime;
+        jumpBufferTemp = 0;
+        #region rotate on jump 
+        if (rb.velocity.x > 0)
+        {
+            rb.AddTorque(rotationOnJump * -1, ForceMode2D.Impulse);
+        }
+        if (rb.velocity.x < 0)
+        {
+            rb.AddTorque(rotationOnJump, ForceMode2D.Impulse);
+        }
+        #endregion
     }
     private void groundCheck()
     {
@@ -115,7 +139,7 @@ public class CharecterController : MonoBehaviour
       }
         else if (!isGrounded)
         {
-            Debug.Log(raycastHit.collider);
+            //Debug.Log(raycastHit.collider);
             lastTimeGrounded += Time.deltaTime;
         }
         else
