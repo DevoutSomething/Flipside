@@ -771,7 +771,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -795,7 +795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668915193}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -10}
+  m_LocalPosition: {x: 18.5, y: -0.72, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -864,8 +864,9 @@ MonoBehaviour:
   moveSpeed: 9
   acceleration: 13
   decceleration: 16
-  vellocityPoweer: 0.96
+  velocityPoweer: 0
   friction: 0.22
+  facingForward: 0
   jumpForce: 13
   jumpCut: 0.4
   CoyoteTime: 0.15
@@ -873,18 +874,21 @@ MonoBehaviour:
   gravityScale: 1
   GravityMultiplier: 2
   jumpBufferTime: 0.2
+  canJump: 0
   groundCheckPoint: {fileID: 949126771}
   groundCheckSize: {x: 0.4, y: 0.1}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   dashSpeed: 0
+  slowDownLength: 2
+  dashDiagnalMod: 0
   lastTimeGrounded: 0
   isGrounded: 0
   moveDirection: 0
   isJumping: 0
-  hasDashed: 0
   rotationOnJump: 5
+  timeManager: {fileID: 0}
 --- !u!58 &2096452221
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -982,7 +986,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096452218}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.508, y: -0.531, z: 0}
+  m_LocalPosition: {x: 10.62, y: -2.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

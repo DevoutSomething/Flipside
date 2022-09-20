@@ -31,6 +31,8 @@ public class CharecterController : MonoBehaviour
     [Header("Dash")]
     public float dashSpeed;
     public float slowDownLength = 2;
+    [Range(0.0f, 1.0f)]
+    public float dashDiagnalMod;
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
@@ -107,7 +109,7 @@ public class CharecterController : MonoBehaviour
                 Debug.Log("Jumped with buffer");
             }
         }
-        if (isJumping && Input.GetButtonUp("Jump"))
+        if (isJumping && Input.GetButtonUp("Jump") && !isDashing)
         {
             onJumpUp();
         }
@@ -217,46 +219,75 @@ public class CharecterController : MonoBehaviour
         if (dirx == 0 && diry == 0)
         {
             Debug.Log("dash no direction");
+            // rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
         //dash left
         if (dirx < 0 && diry == 0)
         {
             Debug.Log("dash left");
+            rb.velocity = new Vector2(0,0);
+            rb.AddForce(Vector2.left * dashSpeed, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash right
         if (dirx > 0 && diry == 0)
         {
             Debug.Log("dash right");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash up
         if(dirx == 0 && diry > 0)
         {
             Debug.Log("dash up");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.up * dashSpeed, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash down
         if(dirx == 0 && diry < 0)
         {
             Debug.Log("dash down");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.down * dashSpeed, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash left down
         if (dirx < 0 && diry < 0)
         {
             Debug.Log("dash down left");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.down * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.left * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash right down
         if (dirx > 0 && diry < 0)
         {
             Debug.Log("dash down right");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.down * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.right * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash left up
         if (dirx < 0 && diry > 0)
         {
             Debug.Log("dash up left");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.up * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.left * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         //dash right up
         if (dirx > 0 && diry > 0)
         {
             Debug.Log("dash up right");
+            rb.velocity = new Vector2(0, 0);
+            rb.AddForce(Vector2.up * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.right * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
+            setGravityScale(2);
         }
         #endregion
     }
