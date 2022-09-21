@@ -44,6 +44,7 @@ public class CharecterController : MonoBehaviour
     private bool canDash;
     private float directionX;
     private float directionY;
+    private CameraController cameraController;
 
     [Header("set to zero")]
     public float rotationOnJump;
@@ -52,6 +53,7 @@ public class CharecterController : MonoBehaviour
     private float jumpBufferTemp;
 
     public TimeManager timeManager;
+    public GameObject Camera;
     //[Header("Private Variables")]
 
 
@@ -62,6 +64,7 @@ public class CharecterController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         setGravityScale(gravityScale);
         timeManager = GameObject.Find("GameManager").GetComponent<TimeManager>();
+        cameraController = Camera.GetComponent<CameraController>();
     }
     private void Update()
     {
@@ -207,11 +210,13 @@ public class CharecterController : MonoBehaviour
     private void beginDashSlow()
     {
         Debug.Log("TimeSlow");
+        cameraController.IsDashing();
         timeManager.SlowDownTime();
     }
     private void Dash(float dirx, float diry)
     {
         timeManager.ResetTime();
+        cameraController.FinishedDash();
         isDashing = false;
         slowDownLength = 2f;
         #region dashDirection

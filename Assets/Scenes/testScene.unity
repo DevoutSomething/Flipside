@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -434,6 +435,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09f7c370f8754a4ea84537a49783e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 1866435954}
+  PlayerLight: {fileID: 814028295}
+  CameraLight: {fileID: 331930625}
+  zoomSpeed: 0
+  baseCameraSize: 0
+  currentDashing: 0
+  timeBeforeStart: 0
+  darkenSpeed: 0
+  lightenSpeed: 0
+  darkenLimit: 0
+  lightIntensityPerm: 0
+  lightIntensityPlayerPerm: 0
+  playerLightLimit: 0
+  cameraPosition: {fileID: 0}
 --- !u!1 &606984560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,6 +1188,7 @@ MonoBehaviour:
   isJumping: 0
   rotationOnJump: 0
   timeManager: {fileID: 0}
+  Camera: {fileID: 0}
 --- !u!61 &1866435960
 BoxCollider2D:
   m_ObjectHideFlags: 0
