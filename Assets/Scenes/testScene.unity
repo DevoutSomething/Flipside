@@ -450,10 +450,11 @@ MonoBehaviour:
   Player: {fileID: 1866435954}
   PlayerLight: {fileID: 814028295}
   CameraLight: {fileID: 331930625}
-  zoomSpeed: 0
-  baseCameraSize: 0
+  zoomSpeed: 0.1
+  baseCameraSize: 5
+  zoomLimit: 4.5
   currentDashing: 0
-  timeBeforeStart: 0
+  timeBeforeStart: 0.15
   darkenSpeed: 0
   lightenSpeed: 0
   darkenLimit: 0
@@ -1188,7 +1189,7 @@ MonoBehaviour:
   isJumping: 0
   rotationOnJump: 0
   timeManager: {fileID: 0}
-  Camera: {fileID: 0}
+  Camera: {fileID: 519420028}
 --- !u!61 &1866435960
 BoxCollider2D:
   m_ObjectHideFlags: 0

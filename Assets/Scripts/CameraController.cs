@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float zoomSpeed;
     public float baseCameraSize;
+    public float zoomLimit;
     [Header("Dash")]
     public bool currentDashing;
     public float timeBeforeStart;
@@ -25,14 +26,17 @@ public class CameraController : MonoBehaviour
     [Header("Private Variables")]
     [SerializeField] private Transform cameraPosition;
     private float timer;
+    private Camera camera;
+   
     
     void Start()
     {
-       
+        camera = gameObject.GetComponent<Camera>();
     }
 
     void Update()
     {
+        #region dashingUpdate
         if (currentDashing && timer <= 0)
         {
             if(CameraLight.intensity > darkenLimit)
@@ -44,13 +48,19 @@ public class CameraController : MonoBehaviour
             {
                 PlayerLight.intensity += Time.unscaledDeltaTime * lightenSpeed;
             }
+            if (camera.orthographicSize > zoomLimit)
+            {
+                SetCameraSize(camera.orthographicSize -= zoomSpeed * Time.deltaTime);
+            }
         }
         if (timer > 0)
         {
             timer -= Time.deltaTime;
         }
+        #endregion
     }
 
+    #region dashing
     public void IsDashing()
     {
         currentDashing = true;
@@ -61,9 +71,11 @@ public class CameraController : MonoBehaviour
         currentDashing = false;
         CameraLight.intensity = lightIntensityPerm;
         PlayerLight.intensity = lightIntensityPlayerPerm;
+        SetCameraSize(baseCameraSize);
     }
+    #endregion
     public void SetCameraSize(float size)
     {
-        GetComponent<Camera>().orthographicSize = size;
+        camera.orthographicSize = size;
     }
 }
