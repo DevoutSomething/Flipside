@@ -36,9 +36,14 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
         #region dashingUpdate
         if (currentDashing && timer <= 0)
         {
+            
             if(CameraLight.intensity > darkenLimit)
             {
                 CameraLight.intensity -= Time.unscaledDeltaTime * darkenSpeed;
@@ -53,10 +58,7 @@ public class CameraController : MonoBehaviour
                 SetCameraSize(camera.orthographicSize -= zoomSpeed * Time.deltaTime);
             }
         }
-        if (timer > 0)
-        {
-            timer -= Time.deltaTime;
-        }
+        
         #endregion
     }
 
