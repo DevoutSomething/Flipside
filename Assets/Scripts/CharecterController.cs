@@ -33,6 +33,9 @@ public class CharecterController : MonoBehaviour
     public float slowDownLength = 2;
     [Range(0.0f, 1.0f)]
     public float dashDiagnalMod;
+    public float dashTime;
+    private Vector2 dashingDir;
+
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
@@ -41,6 +44,7 @@ public class CharecterController : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private bool isJumping;
     private bool isDashing;
+    private bool isActuallyDashing;
     private bool canDash;
     private float directionX;
     private float directionY;
@@ -65,34 +69,53 @@ public class CharecterController : MonoBehaviour
         setGravityScale(gravityScale);
         timeManager = GameObject.Find("GameManager").GetComponent<TimeManager>();
         cameraController = Camera.GetComponent<CameraController>();
+        canDash = true;
     }
     private void Update()
     {
         moveDirection = Input.GetAxis("Horizontal");
         #region Dashing
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash)
+        var dashInput = Input.GetButtonDown("Dash");
+        var dashInputUp = Input.GetButtonUp("Dash");
+
+        if (dashInput && canDash)
         {
             canDash = false;
             isDashing = true;
             beginDashSlow();
+
         }
-        if (isDashing && Input.GetKeyUp(KeyCode.LeftShift))
+        if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
         {
-            isDashing = false;
-            Dash(directionX, directionY);
             slowDownLength = 2;
+            isDashing = false;
+            isActuallyDashing = true;
+            dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if(dashingDir == Vector2.zero)
+            {
+                Debug.Log("dash no direction");
+            }
+            timeManager.ResetTime();
+            cameraController.FinishedDash();
+            isDashing = false;
+            slowDownLength = 2f;
+            StartCoroutine(StopDashing());
+            //add dash stop
         }
         if(slowDownLength >= 0 && Input.GetKey(KeyCode.LeftShift))
         {
             slowDownLength -= Time.unscaledDeltaTime;
         }
-        if (slowDownLength <= 0 && isDashing)
-        {
-            Dash(directionX, directionY);
 
+        if (isActuallyDashing)
+        {
+            rb.velocity = dashingDir.normalized * dashSpeed;
+            return;
         }
         #endregion
-        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0)
+
+        #region Jump
+        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isDashing)
         {
             isJumping = true;
             Jump();
@@ -116,7 +139,9 @@ public class CharecterController : MonoBehaviour
         {
             onJumpUp();
         }
-        if(Input.GetAxis("Horizontal") <= 1 && (Input.GetAxis("Horizontal")) > 0)
+        #endregion
+        #region directionFacing
+        if (Input.GetAxis("Horizontal") <= 1 && (Input.GetAxis("Horizontal")) > 0)
         {
             facingForward = true;
             transform.localScale = new Vector2(1, transform.localScale.y);
@@ -126,8 +151,7 @@ public class CharecterController : MonoBehaviour
             facingForward = false;
             transform.localScale = new Vector2(-1, transform.localScale.y);
         }
-        directionX = Input.GetAxisRaw("Horizontal");
-        directionY = Input.GetAxisRaw("Vertical");
+        #endregion
 
     }
     private void FixedUpdate()
@@ -213,89 +237,14 @@ public class CharecterController : MonoBehaviour
         cameraController.IsDashing();
         timeManager.SlowDownTime();
     }
-    private void Dash(float dirx, float diry)
-    {
-        timeManager.ResetTime();
-        cameraController.FinishedDash();
-        isDashing = false;
-        slowDownLength = 2f;
-        #region dashDirection
-        //dash in direction facing
-        if (dirx == 0 && diry == 0)
-        {
-            Debug.Log("dash no direction");
-            // rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        }
-        //dash left
-        if (dirx < 0 && diry == 0)
-        {
-            Debug.Log("dash left");
-            rb.velocity = new Vector2(0,0);
-            rb.AddForce(Vector2.left * dashSpeed, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash right
-        if (dirx > 0 && diry == 0)
-        {
-            Debug.Log("dash right");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash up
-        if(dirx == 0 && diry > 0)
-        {
-            Debug.Log("dash up");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.up * dashSpeed, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash down
-        if(dirx == 0 && diry < 0)
-        {
-            Debug.Log("dash down");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.down * dashSpeed, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash left down
-        if (dirx < 0 && diry < 0)
-        {
-            Debug.Log("dash down left");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.down * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            rb.AddForce(Vector2.left * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash right down
-        if (dirx > 0 && diry < 0)
-        {
-            Debug.Log("dash down right");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.down * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            rb.AddForce(Vector2.right * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash left up
-        if (dirx < 0 && diry > 0)
-        {
-            Debug.Log("dash up left");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.up * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            rb.AddForce(Vector2.left * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        //dash right up
-        if (dirx > 0 && diry > 0)
-        {
-            Debug.Log("dash up right");
-            rb.velocity = new Vector2(0, 0);
-            rb.AddForce(Vector2.up * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            rb.AddForce(Vector2.right * dashSpeed * dashDiagnalMod, ForceMode2D.Impulse);
-            setGravityScale(2);
-        }
-        #endregion
-    }
 
+
+    private IEnumerator StopDashing()
+    {
+        yield return new WaitForSecondsRealtime(dashTime);
+        isDashing = false;
+        isActuallyDashing = false;
+        onJumpUp();
+    }
 }
 
