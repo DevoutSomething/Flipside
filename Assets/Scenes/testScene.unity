@@ -455,7 +455,7 @@ MonoBehaviour:
   zoomLimit: 4.5
   currentDashing: 0
   timeBeforeStart: 0.05
-  darkenSpeed: 0.5
+  darkenSpeed: 1
   lightenSpeed: 0.5
   darkenLimit: 0.1
   lightIntensityPerm: 0.75
@@ -1180,9 +1180,10 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  dashSpeed: 24
-  slowDownLength: 2
+  dashSpeed: 15
+  slowDownLength: 1
   dashDiagnalMod: 0.5
+  dashTime: 0.4
   lastTimeGrounded: 0
   isGrounded: 0
   moveDirection: 0
@@ -1329,7 +1330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fe760de27d5d2489c193df876b2494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowdownFactor: 0.1
+  slowdownFactor: 0.139
   slowdownLength: 0.2
   resettingTime: 0
 --- !u!4 &2037359315
