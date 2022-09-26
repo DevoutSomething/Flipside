@@ -115,7 +115,7 @@ public class CharecterController : MonoBehaviour
         #endregion
 
         #region Jump
-        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isDashing)
+        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing)
         {
             isJumping = true;
             Jump();
