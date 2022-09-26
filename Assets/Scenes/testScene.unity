@@ -454,13 +454,13 @@ MonoBehaviour:
   baseCameraSize: 5
   zoomLimit: 4.5
   currentDashing: 0
-  timeBeforeStart: 0.15
-  darkenSpeed: 0
-  lightenSpeed: 0
-  darkenLimit: 0
-  lightIntensityPerm: 0
+  timeBeforeStart: 0.05
+  darkenSpeed: 0.5
+  lightenSpeed: 0.5
+  darkenLimit: 0.1
+  lightIntensityPerm: 0.75
   lightIntensityPlayerPerm: 0
-  playerLightLimit: 0
+  playerLightLimit: 1
   cameraPosition: {fileID: 0}
 --- !u!1 &606984560
 GameObject:
