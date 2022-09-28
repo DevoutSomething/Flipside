@@ -11,18 +11,20 @@ public class enemyHealth : MonoBehaviour
 
     private void Start()
     {
-        {
             currentHealth = health;
-        }
     }
 
     public void Damage(int amount)
     {
-        currentHealth -= amount;
-        if (currentHealth <= 0)
+        if(damageable && currentHealth > 0)
         {
-            currentHealth = 0;
-            gameObject.SetActive(false);
+            currentHealth -= amount;
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                //make death animation
+                gameObject.SetActive(false);
+            }
         }
     }
 }
