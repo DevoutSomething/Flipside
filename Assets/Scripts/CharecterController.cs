@@ -39,7 +39,7 @@ public class CharecterController : MonoBehaviour
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
-    [SerializeField] private bool isGrounded;
+    [SerializeField] public bool isGrounded;
     [SerializeField] private float moveDirection;
     private Rigidbody2D rb;
     [SerializeField] private bool isJumping;
@@ -58,8 +58,9 @@ public class CharecterController : MonoBehaviour
 
     public TimeManager timeManager;
     public GameObject Camera;
-    //[Header("Private Variables")]
+    public bool FacingRight;
 
+    //[Header("Private Variables")]
 
 
     private void Start()
@@ -74,6 +75,14 @@ public class CharecterController : MonoBehaviour
     private void Update()
     {
         moveDirection = Input.GetAxis("Horizontal");
+        if (moveDirection > 0)
+        {
+            FacingRight = true;
+        }
+        else if (moveDirection < 0)
+        {
+            FacingRight = false;
+        }
         #region Dashing
         var dashInput = Input.GetButtonDown("Dash");
         var dashInputUp = Input.GetButtonUp("Dash");
