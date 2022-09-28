@@ -454,10 +454,10 @@ MonoBehaviour:
   baseCameraSize: 5
   zoomLimit: 4.5
   currentDashing: 0
-  timeBeforeStart: 0.05
+  timeBeforeStart: 0.005
   darkenSpeed: 1
   lightenSpeed: 0.5
-  darkenLimit: 0.1
+  darkenLimit: 0
   lightIntensityPerm: 0.75
   lightIntensityPlayerPerm: 0
   playerLightLimit: 1
@@ -1180,10 +1180,10 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  dashSpeed: 15
+  dashSpeed: 25
   slowDownLength: 1
   dashDiagnalMod: 0.5
-  dashTime: 0.4
+  dashTime: 0.15
   lastTimeGrounded: 0
   isGrounded: 0
   moveDirection: 0
