@@ -6,6 +6,7 @@ using UnityEngine;
 public class OverworldMovement : MonoBehaviour
 {
     public float Speed = 3f;
+    public Animator anim;
     public bool IsMoving { get; private set; }
 
     public OverworldPin CurrentPin { get; private set; }
@@ -22,6 +23,14 @@ public class OverworldMovement : MonoBehaviour
 
     private void Update()
     {
+       if(IsMoving == false)
+        {
+            anim.SetFloat("speed", 0);
+        }
+        else if (IsMoving == true )
+        {
+            anim.SetFloat("speed", 1);
+        }  
         if (_targetPin == null) return;
 
        
