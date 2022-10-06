@@ -70,7 +70,7 @@ public class CharecterController : MonoBehaviour
         setGravityScale(gravityScale);
         timeManager = GameObject.Find("GameManager").GetComponent<TimeManager>();
         cameraController = Camera.GetComponent<CameraController>();
-        playerAnim = gameObject.GetComponent<Animator>();
+        playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
     }
     private void Update()
@@ -89,7 +89,11 @@ public class CharecterController : MonoBehaviour
             playerAnim.SetBool("Run", true);
             playerAnim.SetBool("Jump", false);
         }
-        if(!isGrounded && isJumping)
+        else
+        {
+            playerAnim.SetBool("Run", false);
+        }
+        if (!isGrounded && isJumping)
         {
             playerAnim.SetBool("Jump", true);
         }
