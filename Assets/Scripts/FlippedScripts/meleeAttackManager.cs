@@ -40,19 +40,16 @@ public class meleeAttackManager : MonoBehaviour
         {
             anim.SetTrigger("UpwardAttack");
             Debug.Log("1");
-            meleeAnimator.SetTrigger("UpwardAttackSwipe");
         }
         if(meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
             anim.SetTrigger("DownwardAttack");
             Debug.Log("2");
-            meleeAnimator.SetTrigger("DownwardAttackSwipe");
         }
         if(meleeAttack && Input.GetAxis("Vertical") == 0 || meleeAttack && (Input.GetAxis("Vertical") < 0 && charecterController.isGrounded))
         {
             anim.SetTrigger("ForwardAttack");
             Debug.Log("3");
-            meleeAnimator.SetTrigger("ForwardAttackSwipe");
         }
     }
 
