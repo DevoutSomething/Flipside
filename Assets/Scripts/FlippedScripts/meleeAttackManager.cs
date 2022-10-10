@@ -8,16 +8,17 @@ public class meleeAttackManager : MonoBehaviour
     public float upwardsForce;
     public float movementTime = .1f;
     private bool meleeAttack;
+    public GameObject meleeStuff;
+    public GameObject player;
     private Animator meleeAnimator;
 
     private Animator anim;
-
     private CharecterController charecterController;
     private void Start()
     {
-        anim = GetComponent<Animator>();
+        meleeAnimator = meleeStuff.GetComponentInChildren<Animator>();
+        anim = player.GetComponentInChildren<Animator>();
         charecterController = GetComponent<CharecterController>();
-        meleeAnimator = GetComponentInChildren<meleeAttack>().gameObject.GetComponent<Animator>();
     }
     private void Update()
     {
@@ -25,9 +26,10 @@ public class meleeAttackManager : MonoBehaviour
     }
     private void CheckInput()
     {
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2"))    
         {
             meleeAttack = true;
+            Debug.Log("working melee");
         }
         else
         {
@@ -37,16 +39,19 @@ public class meleeAttackManager : MonoBehaviour
         if(meleeAttack && Input.GetAxis("Vertical") > 0)
         {
             anim.SetTrigger("UpwardAttack");
+            Debug.Log("1");
             meleeAnimator.SetTrigger("UpwardAttackSwipe");
         }
         if(meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
             anim.SetTrigger("DownwardAttack");
+            Debug.Log("2");
             meleeAnimator.SetTrigger("DownwardAttackSwipe");
         }
         if(meleeAttack && Input.GetAxis("Vertical") == 0 || meleeAttack && (Input.GetAxis("Vertical") < 0 && charecterController.isGrounded))
         {
             anim.SetTrigger("ForwardAttack");
+            Debug.Log("3");
             meleeAnimator.SetTrigger("ForwardAttackSwipe");
         }
     }
