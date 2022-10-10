@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class CharecterController : MonoBehaviour
 {
+
+
+    public bool colideWithTilemap;
     [Header("Speed")]
     public float moveSpeed;
     public float acceleration;
@@ -100,6 +103,11 @@ public class CharecterController : MonoBehaviour
         else if (isGrounded)
         {
             playerAnim.SetBool("Jump", false);
+        }
+
+        if (!isGrounded)
+        {
+            lastTimeGrounded += Time.deltaTime;
         }
         
         #region Dashing
@@ -204,9 +212,12 @@ public class CharecterController : MonoBehaviour
             setGravityScale(gravityScale);
         }
         #endregion
-        
 
-        groundCheck();
+
+        if (!colideWithTilemap) 
+        { 
+            groundCheck(); 
+        }
     }
     private void Jump()
     {
@@ -228,13 +239,14 @@ public class CharecterController : MonoBehaviour
     }
     private void groundCheck()
     {
-       RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2d.bounds.center, Vector2.down, boxCollider2d.bounds.extents.y + 0.05f, groundLayer);
-      if (raycastHit.collider != null)
-      {
+        RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2d.bounds.center, Vector2.down, boxCollider2d.bounds.extents.y + 0.05f, groundLayer);
+        
+        if (raycastHit.collider != null)
+        {
             lastTimeGrounded = 0;
             isGrounded = true;
             canDash = true;
-      }
+        }
         else if (!isGrounded)
         {
             //Debug.Log(raycastHit.collider);
@@ -243,6 +255,32 @@ public class CharecterController : MonoBehaviour
         else
         {
             isGrounded = false;
+        }
+    
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (colideWithTilemap)
+        {
+            if (col.collider.gameObject.layer == LayerMask.NameToLayer("ground"))
+            {
+                lastTimeGrounded = 0;
+                isGrounded = true;
+                canDash = true;
+            }
+        }
+        
+    }
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        if (colideWithTilemap)
+        {
+            if (col.collider.gameObject.layer == LayerMask.NameToLayer("ground"))
+            {
+                lastTimeGrounded = 0;
+                isGrounded = false;
+            }
         }
     }
 

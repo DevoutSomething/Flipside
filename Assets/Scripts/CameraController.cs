@@ -44,8 +44,9 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         camera = gameObject.GetComponent<Camera>();
-        SetRoom(startingRoom);
+       // SetRoom(startingRoom);
         SetCameraSize(baseCameraSize);
+       
     }
 
     void Update()
@@ -81,7 +82,7 @@ public class CameraController : MonoBehaviour
         if (!changingRooms)
         {
             Vector3 targetPosition = Player.transform.position + offset;
-            targetPosition = ClampCamera(targetPosition);
+            //Vector3 clampedPosition = ClampCamera(targetPosition);
             Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             transform.position = smoothPosition;
         }
@@ -110,9 +111,8 @@ public class CameraController : MonoBehaviour
     }
     private Vector3 ClampCamera (Vector3 cameraTarget)
     {
-        float camHeight = camera.orthographicSize;
-        float camWidth = camera.orthographicSize * camera.aspect;
-
+        float camHeight = camera.orthographicSize / 2;
+        float camWidth = camera.orthographicSize * camera.aspect / 2;
         float maxX = roomMaxX - camWidth;
         float minX = roomMinX + camWidth;
         float maxY = roomMaxY - camHeight;
