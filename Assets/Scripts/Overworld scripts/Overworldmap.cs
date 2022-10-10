@@ -24,19 +24,19 @@ public class Overworldmap : MonoBehaviour
 
 	private void CheckForInput()
 	{
-		if (Input.GetKeyUp(KeyCode.UpArrow))
+		if (Input.GetKeyDown(KeyCode.UpArrow))
 		{
 			Character.TrySetDirection(Direction.Up);
 		}
-		else if (Input.GetKeyUp(KeyCode.DownArrow))
+		else if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
 			Character.TrySetDirection(Direction.Down);
 		}
-		else if (Input.GetKeyUp(KeyCode.LeftArrow))
+		else if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
 			Character.TrySetDirection(Direction.Left);
 		}
-		else if (Input.GetKeyUp(KeyCode.RightArrow))
+		else if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			Character.TrySetDirection(Direction.Right);
 		}

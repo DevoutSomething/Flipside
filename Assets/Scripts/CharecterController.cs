@@ -59,7 +59,7 @@ public class CharecterController : MonoBehaviour
     public TimeManager timeManager;
     public GameObject Camera;
     public bool FacingRight;
-
+    public Animator playerAnim;
     //[Header("Private Variables")]
 
 
@@ -70,6 +70,7 @@ public class CharecterController : MonoBehaviour
         setGravityScale(gravityScale);
         timeManager = GameObject.Find("GameManager").GetComponent<TimeManager>();
         cameraController = Camera.GetComponent<CameraController>();
+        playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
     }
     private void Update()
@@ -83,6 +84,24 @@ public class CharecterController : MonoBehaviour
         {
             FacingRight = false;
         }
+        if(isGrounded && Input.GetAxis("Horizontal") != 0)
+        {
+            playerAnim.SetBool("Run", true);
+            playerAnim.SetBool("Jump", false);
+        }
+        else
+        {
+            playerAnim.SetBool("Run", false);
+        }
+        if (!isGrounded && isJumping)
+        {
+            playerAnim.SetBool("Jump", true);
+        }
+        else if (isGrounded)
+        {
+            playerAnim.SetBool("Jump", false);
+        }
+        
         #region Dashing
         var dashInput = Input.GetButtonDown("Dash");
         var dashInputUp = Input.GetButtonUp("Dash");
