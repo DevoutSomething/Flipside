@@ -63,6 +63,9 @@ public class CharecterController : MonoBehaviour
     public GameObject Camera;
     public bool FacingRight;
     public Animator playerAnim;
+
+    [Header("attack interface")]
+    private meleeAttackManager MeleeAttackManager;
     //[Header("Private Variables")]
 
 
@@ -72,135 +75,143 @@ public class CharecterController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         setGravityScale(gravityScale);
         timeManager = GameObject.Find("GameManager").GetComponent<TimeManager>();
+        MeleeAttackManager = gameObject.GetComponent<meleeAttackManager>();
         cameraController = Camera.GetComponent<CameraController>();
         playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
     }
     private void Update()
     {
-        moveDirection = Input.GetAxis("Horizontal");
-        if (moveDirection > 0)
+        if (MeleeAttackManager.canAction)
         {
-            FacingRight = true;
-        }
-        else if (moveDirection < 0)
-        {
-            FacingRight = false;
-        }
-        if(isGrounded && Input.GetAxis("Horizontal") != 0)
-        {
-            playerAnim.SetBool("Run", true);
-            playerAnim.SetBool("Jump", false);
-        }
-        else
-        {
-            playerAnim.SetBool("Run", false);
-        }
-        if (!isGrounded && isJumping)
-        {
-            playerAnim.SetBool("Jump", true);
-        }
-        else if (isGrounded)
-        {
-            playerAnim.SetBool("Jump", false);
-        }
-
-        if (!isGrounded)
-        {
-            lastTimeGrounded += Time.deltaTime;
-        }
-        
-        #region Dashing
-        var dashInput = Input.GetButtonDown("Dash");
-        var dashInputUp = Input.GetButtonUp("Dash");
-
-        if (dashInput && canDash)
-        {
-            canDash = false;
-            isDashing = true;
-            beginDashSlow();
-
-        }
-        if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
-        {
-            slowDownLength = 2;
-            isDashing = false;
-            isActuallyDashing = true;
-            dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            if(dashingDir == Vector2.zero)
+            moveDirection = Input.GetAxis("Horizontal");
+            if (moveDirection > 0)
             {
-                Debug.Log("dash no direction");
+                FacingRight = true;
             }
-            timeManager.ResetTime();
-            cameraController.FinishedDash();
-            isDashing = false;
-            slowDownLength = 2f;
-            StartCoroutine(StopDashing());
-            //add dash stop
-        }
-        if(slowDownLength >= 0 && Input.GetKey(KeyCode.LeftShift))
-        {
-            slowDownLength -= Time.unscaledDeltaTime;
-        }
-
-        if (isActuallyDashing)
-        {
-            rb.velocity = dashingDir.normalized * dashSpeed;
-            return;
-        }
-        #endregion
-
-        #region Jump
-        if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing)
-        {
-            isJumping = true;
-            Jump();
-            Debug.Log("jumped");
-        }
-        else if(Input.GetButtonDown("Jump") && !isGrounded && !isJumping)
-        {
-            jumpBufferTemp = jumpBufferTime;
-        }
-        if (jumpBufferTemp > 0 && !isJumping)
-        {
-            jumpBufferTemp -= Time.deltaTime;
-            if (isGrounded && lastTimeGrounded < CoyoteTime && !isJumping)
+            else if (moveDirection < 0)
             {
-                jumpBufferTemp = 0;
+                FacingRight = false;
+            }
+
+            if (isGrounded && Input.GetAxis("Horizontal") != 0)
+            {
+                playerAnim.SetBool("Run", true);
+                playerAnim.SetBool("Jump", false);
+            }
+            else
+            {
+                playerAnim.SetBool("Run", false);
+            }
+            if (!isGrounded && isJumping)
+            {
+                playerAnim.SetBool("Jump", true);
+            }
+            else if (isGrounded)
+            {
+                playerAnim.SetBool("Jump", false);
+            }
+
+            if (!isGrounded)
+            {
+                lastTimeGrounded += Time.deltaTime;
+            }
+
+            #region Dashing
+            var dashInput = Input.GetButtonDown("Dash");
+            var dashInputUp = Input.GetButtonUp("Dash");
+            if (dashInput && canDash)
+            {
+                canDash = false;
+                isDashing = true;
+                beginDashSlow();
+
+            }
+            if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
+            {
+                slowDownLength = 2;
+                isDashing = false;
+                isActuallyDashing = true;
+                dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+                if (dashingDir == Vector2.zero)
+                {
+                    Debug.Log("dash no direction");
+                }
+                timeManager.ResetTime();
+                cameraController.FinishedDash();
+                isDashing = false;
+                slowDownLength = 2f;
+                StartCoroutine(StopDashing());
+                //add dash stop
+            }
+            if (slowDownLength >= 0 && Input.GetKey(KeyCode.LeftShift))
+            {
+                slowDownLength -= Time.unscaledDeltaTime;
+            }
+
+            if (isActuallyDashing)
+            {
+                rb.velocity = dashingDir.normalized * dashSpeed;
+                return;
+            }
+            #endregion
+
+            #region Jump
+            if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing)
+            {
+                isJumping = true;
                 Jump();
-                Debug.Log("Jumped with buffer");
+                Debug.Log("jumped");
             }
+            else if (Input.GetButtonDown("Jump") && !isGrounded && !isJumping)
+            {
+                jumpBufferTemp = jumpBufferTime;
+            }
+            if (jumpBufferTemp > 0 && !isJumping)
+            {
+                jumpBufferTemp -= Time.deltaTime;
+                if (isGrounded && lastTimeGrounded < CoyoteTime && !isJumping)
+                {
+                    jumpBufferTemp = 0;
+                    Jump();
+                    Debug.Log("Jumped with buffer");
+                }
+            }
+            if (isJumping && Input.GetButtonUp("Jump") && !isDashing)
+            {
+                onJumpUp();
+            }
+            #endregion
+            #region directionFacing
+            if (Input.GetAxis("Horizontal") <= 1 && (Input.GetAxis("Horizontal")) > 0)
+            {
+                facingForward = true;
+                transform.localScale = new Vector2(1, transform.localScale.y);
+            }
+            else if (Input.GetAxis("Horizontal") >= -1 && (Input.GetAxis("Horizontal")) < 0)
+            {
+                facingForward = false;
+                transform.localScale = new Vector2(-1, transform.localScale.y);
+            }
+            #endregion
+
         }
-        if (isJumping && Input.GetButtonUp("Jump") && !isDashing)
-        {
-            onJumpUp();
-        }
-        #endregion
-        #region directionFacing
-        if (Input.GetAxis("Horizontal") <= 1 && (Input.GetAxis("Horizontal")) > 0)
-        {
-            facingForward = true;
-            transform.localScale = new Vector2(1, transform.localScale.y);
-        }
-        else if (Input.GetAxis("Horizontal") >= -1 && (Input.GetAxis("Horizontal")) < 0)
-        {
-            facingForward = false;
-            transform.localScale = new Vector2(-1, transform.localScale.y);
-        }
-        #endregion
 
     }
     private void FixedUpdate()
     {
-       
-        #region Speed
-        float targetSpeed = moveDirection * moveSpeed;
-        float speedDiff = targetSpeed - rb.velocity.x;
-        //? = if statement
-        float accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
-        float movement = Mathf.Pow(Mathf.Abs(speedDiff) * accelerationRate, velocityPoweer) * Mathf.Sign(speedDiff);
-        rb.AddForce(movement * Vector2.right);
-        #endregion
+        if (MeleeAttackManager.canAction)
+        {
+            #region Speed
+            float targetSpeed = moveDirection * moveSpeed;
+            float speedDiff = targetSpeed - rb.velocity.x;
+            //? = if statement
+            float accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
+            float movement = Mathf.Pow(Mathf.Abs(speedDiff) * accelerationRate, velocityPoweer) * Mathf.Sign(speedDiff);
+            rb.AddForce(movement * Vector2.right);
+            #endregion
+
+        }
         #region Gravity
         if (rb.velocity.y < 0)
         {

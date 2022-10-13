@@ -1222,6 +1222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa9f6758ab62c40be316e7b488a5aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colideWithTilemap: 0
   moveSpeed: 9
   acceleration: 13
   decceleration: 16
@@ -1297,6 +1298,10 @@ MonoBehaviour:
   movementTime: 0.1
   meleeStuff: {fileID: 1951057264}
   player: {fileID: 1866435954}
+  attackCooldown: 0.4
+  timeCantAction: 0.2
+  canAction: 0
+  canAttack: 0
 --- !u!1 &1883271745
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,11 +11,18 @@ public class meleeAttackManager : MonoBehaviour
     public GameObject meleeStuff;
     public GameObject player;
     private Animator meleeAnimator;
-
+    public float attackCooldown;
+    public float timeCantAction;
+    public bool canAction;
+    public bool canAttack;
     private Animator anim;
     private CharecterController charecterController;
+    private Rigidbody2D rb;
     private void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        canAttack = true;
+        canAction = true;
         meleeAnimator = meleeStuff.GetComponentInChildren<Animator>();
         anim = player.GetComponentInChildren<Animator>();
         charecterController = GetComponent<CharecterController>();
@@ -26,10 +33,15 @@ public class meleeAttackManager : MonoBehaviour
     }
     private void CheckInput()
     {
-        if (Input.GetButtonDown("Fire2"))    
+        if (Input.GetButtonDown("Fire2")  && canAttack && canAction)    
         {
             meleeAttack = true;
+            canAttack = false;
+            canAction = false;
             Debug.Log("working melee");
+            StartCoroutine(AttackCooldown());
+            StartCoroutine(AttackNoAction());
+            rb.velocity = new Vector2(0, rb.velocity.y);
         }
         else
         {
@@ -53,6 +65,17 @@ public class meleeAttackManager : MonoBehaviour
         }
     }
 
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSecondsRealtime(attackCooldown);
+        canAttack = true;
 
+    }
+    private IEnumerator AttackNoAction()
+    {
+        yield return new WaitForSecondsRealtime(timeCantAction);
+        canAction = true;
+
+    }
 
 }

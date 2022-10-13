@@ -14,6 +14,7 @@ public class meleeAttack : MonoBehaviour
     private CharecterController characterController;
 
 
+
     private void Start()
     {
         characterController = GetComponentInParent<CharecterController>();
@@ -81,4 +82,6 @@ public class meleeAttack : MonoBehaviour
         downwardStrike = false;
         
     }
+    
+
 }
