@@ -52,16 +52,21 @@ public class meleeAttackManager : MonoBehaviour
         if(meleeAttack && Input.GetAxis("Vertical") > 0)
         {
             anim.SetTrigger("UpwardAttack");
+            meleeAnimator.SetTrigger("AttackUp");
+            
             Debug.Log("1");
         }
         if(meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
             anim.SetTrigger("DownwardAttack");
+            meleeAnimator.SetTrigger("AttackDown");
+
             Debug.Log("2");
         }
         if(meleeAttack && Input.GetAxis("Vertical") == 0 || meleeAttack && (Input.GetAxis("Vertical") < 0 && charecterController.isGrounded))
         {
             anim.SetTrigger("ForwardAttack");
+            meleeAnimator.SetTrigger("AttackSide");
             Debug.Log("3");
         }
     }
