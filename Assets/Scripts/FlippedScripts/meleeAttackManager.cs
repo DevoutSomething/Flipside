@@ -8,9 +8,8 @@ public class meleeAttackManager : MonoBehaviour
     public float upwardsForce;
     public float movementTime = .1f;
     private bool meleeAttack;
-    public GameObject meleeStuff;
     public GameObject player;
-    private Animator meleeAnimator;
+    public Animator meleeAnimator;
     public float attackCooldown;
     public float timeCantAction;
     public bool canAction;
@@ -23,7 +22,6 @@ public class meleeAttackManager : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         canAttack = true;
         canAction = true;
-        meleeAnimator = meleeStuff.GetComponentInChildren<Animator>();
         anim = player.GetComponentInChildren<Animator>();
         charecterController = GetComponent<CharecterController>();
     }
@@ -41,7 +39,10 @@ public class meleeAttackManager : MonoBehaviour
             Debug.Log("working melee");
             StartCoroutine(AttackCooldown());
             StartCoroutine(AttackNoAction());
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            if (charecterController.isGrounded)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
         }
         else
         {
@@ -77,5 +78,5 @@ public class meleeAttackManager : MonoBehaviour
         canAction = true;
 
     }
-
+   
 }

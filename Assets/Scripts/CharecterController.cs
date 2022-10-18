@@ -82,6 +82,31 @@ public class CharecterController : MonoBehaviour
     }
     private void Update()
     {
+        var dashInput = Input.GetButtonDown("Dash");
+        var dashInputUp = Input.GetButtonUp("Dash");
+        if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
+        {
+            slowDownLength = 2;
+            isDashing = false;
+            isActuallyDashing = true;
+            dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            if (dashingDir == Vector2.zero)
+            {
+                Debug.Log("dash no direction");
+            }
+            timeManager.ResetTime();
+            cameraController.FinishedDash();
+            isDashing = false;
+            slowDownLength = 2f;
+            StartCoroutine(StopDashing());
+            //add dash stop
+        }
+        if (isActuallyDashing)
+        {
+            rb.velocity = dashingDir.normalized * dashSpeed;
+            return;
+        }
         if (MeleeAttackManager.canAction)
         {
             moveDirection = Input.GetAxis("Horizontal");
@@ -118,42 +143,22 @@ public class CharecterController : MonoBehaviour
             }
 
             #region Dashing
-            var dashInput = Input.GetButtonDown("Dash");
-            var dashInputUp = Input.GetButtonUp("Dash");
+
             if (dashInput && canDash)
             {
                 canDash = false;
                 isDashing = true;
+                MeleeAttackManager.canAction = false;
                 beginDashSlow();
 
             }
-            if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
-            {
-                slowDownLength = 2;
-                isDashing = false;
-                isActuallyDashing = true;
-                dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-                if (dashingDir == Vector2.zero)
-                {
-                    Debug.Log("dash no direction");
-                }
-                timeManager.ResetTime();
-                cameraController.FinishedDash();
-                isDashing = false;
-                slowDownLength = 2f;
-                StartCoroutine(StopDashing());
-                //add dash stop
-            }
+           
             if (slowDownLength >= 0 && Input.GetKey(KeyCode.LeftShift))
             {
                 slowDownLength -= Time.unscaledDeltaTime;
             }
 
-            if (isActuallyDashing)
-            {
-                rb.velocity = dashingDir.normalized * dashSpeed;
-                return;
-            }
+            
             #endregion
 
             #region Jump
@@ -321,6 +326,7 @@ public class CharecterController : MonoBehaviour
         yield return new WaitForSecondsRealtime(dashTime);
         isDashing = false;
         isActuallyDashing = false;
+        MeleeAttackManager.canAction = true;
         onJumpUp();
     }
 }
