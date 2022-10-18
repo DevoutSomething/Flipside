@@ -10,17 +10,20 @@ public class PlayerHealth : MonoBehaviour
     public Animator playerAnimator;
     public float deathTimer;
     private float deathTimerTEMP;
+    public GameObject spawnPoint;
     public bool death;
     public Vector2 respawnPoint;
+    private meleeAttackManager MeleeAttackManager;
     private void Start()
     {
         playerAnimator = GetComponentInChildren<Animator>();
+        MeleeAttackManager = gameObject.GetComponent<meleeAttackManager>();
         deathTimerTEMP = deathTimer;
-        respawnPoint = gameObject.transform.position;
+        respawnPoint = spawnPoint.transform.position;
     }
     private void Update()
     {
-        if(TempHealth <= 0 || death == true)
+        if(TempHealth <= 0 && death != true)
         {
             death = true;
             StartDeathTimer();
@@ -41,6 +44,7 @@ public class PlayerHealth : MonoBehaviour
     }
     void StartDeathTimer()
     {
+        MeleeAttackManager.canAction = false;
         death = true;
         deathTimerTEMP = deathTimer;
     }
@@ -51,5 +55,14 @@ public class PlayerHealth : MonoBehaviour
         playerAnimator.SetBool("Death", false);
         gameObject.transform.position = respawnPoint;
         TempHealth = 1;
+        MeleeAttackManager.canAction = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    { 
+        if (col.collider.gameObject.layer == LayerMask.NameToLayer("obstacle"))
+        {
+            TempHealth -= 1;
+        }
     }
 }
