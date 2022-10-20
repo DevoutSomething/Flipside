@@ -6,9 +6,10 @@ public class enemyHealth : MonoBehaviour
 {
     public bool damageable = true;
     public bool giveUpwardForce = true;
+    public bool bounceCollide;
+
     public int health = 1;
     private int currentHealth;
-
     private void Start()
     {
             currentHealth = health;

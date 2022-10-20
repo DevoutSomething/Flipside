@@ -6,14 +6,14 @@ public class meleeAttack : MonoBehaviour
 {
     [SerializeField]
     private int damageAmount = 1;
-    private Rigidbody2D rb;
+    [SerializeField] private Rigidbody2D rb;
     private meleeAttackManager MeleeAttackManager;
     private Vector2 direction;
     private bool collided;
     private bool downwardStrike;
     private CharecterController characterController;
-
-
+    private bool bounceMultActive;
+    public float bounceMult;
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class meleeAttack : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //HandleMovement();
+        HandleMovment();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -34,28 +34,56 @@ public class meleeAttack : MonoBehaviour
     }
     void HandleCollision(enemyHealth objHealth)
     {
-        if(objHealth.giveUpwardForce && Input.GetAxis("Vertical")< 0 && !characterController.isGrounded)
+        if(objHealth.giveUpwardForce && Input.GetAxis("Vertical")< 0 && !characterController.isGrounded && objHealth.bounceCollide)
+        {
+            bounceMultActive = true;
+            direction = Vector2.up;
+            downwardStrike = true;
+            collided = true;
+        }
+        else if (objHealth.giveUpwardForce && Input.GetAxis("Vertical") < 0 && !characterController.isGrounded)
         {
             direction = Vector2.up;
             downwardStrike = true;
             collided = true;
         }
-        if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded)
+        else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded && objHealth.bounceCollide)
+        {
+            bounceMultActive = true;
+            direction = Vector2.down;
+            collided = true;
+        }
+
+        else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded)
         {
             direction = Vector2.down;
             collided = true;
         }
-        if((Input.GetAxis("Vertical") <= 0 && characterController.isGrounded) || Input.GetAxis("Vertical") == 0)
+       
+            if ((Input.GetAxis("Vertical") <= 0 && characterController.isGrounded) || Input.GetAxis("Vertical") == 0)
         {
-            if (characterController.FacingRight)
+            if (characterController.FacingRight && objHealth.bounceCollide)
+            {
+                bounceMultActive = true;
+                direction = Vector2.left;
+                collided = true;
+            }
+            else if (characterController.FacingRight == false && objHealth.bounceCollide)
+            {
+                bounceMultActive = true;
+                direction = Vector2.right;
+                collided = true;
+            }
+            else if (characterController.FacingRight)
             {
                 direction = Vector2.left;
+                collided = true;
             }
-            else
+            else if(characterController.FacingRight == false)
             {
                 direction = Vector2.right;
+                collided = true;
             }
-            collided = true;
         }
         objHealth.Damage(damageAmount);
         StartCoroutine(NoLongerColliding());
@@ -67,12 +95,32 @@ public class meleeAttack : MonoBehaviour
         {
             if (downwardStrike)
             {
-                rb.AddForce(direction * MeleeAttackManager.upwardsForce);
+                rb.velocity = new Vector2(0, 0);
+                if (bounceMultActive)
+                {
+                    rb.AddForce(direction * (MeleeAttackManager.upwardsForce * bounceMult));
+                    bounceMultActive = false;
+                }
+                else
+                {
+                    rb.AddForce(direction * MeleeAttackManager.upwardsForce);
+                }
+                
             }
             else
             {
-                rb.AddForce(direction * MeleeAttackManager.defaultForce);
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                if (bounceMultActive)
+                {
+                    rb.AddForce(direction * MeleeAttackManager.defaultForce * bounceMult);
+                    bounceMultActive = false;
+                }
+                else
+                {
+                    rb.AddForce(direction * MeleeAttackManager.defaultForce);
+                }
             }
+            collided = false;
         }
     }
     private IEnumerator NoLongerColliding()
