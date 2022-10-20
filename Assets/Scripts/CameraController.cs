@@ -54,7 +54,7 @@ public class CameraController : MonoBehaviour
         #region dashingUpdate
         if (dashTimer > 0)
         {
-            dashTimer -= Time.deltaTime;
+            dashTimer -= Time.unscaledDeltaTime;
         }
         if (currentDashing && dashTimer <= 0)
         {
