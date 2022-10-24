@@ -48,7 +48,7 @@ public class CharecterController : MonoBehaviour
     [SerializeField] private bool isJumping;
     private bool isDashing;
     private bool isActuallyDashing;
-    private bool canDash;
+    public bool canDash;
     private float directionX;
     private float directionY;
     private CameraController cameraController;
@@ -79,6 +79,7 @@ public class CharecterController : MonoBehaviour
         cameraController = Camera.GetComponent<CameraController>();
         playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
+        slowDownLength = 2f;
     }
     private void Update()
     {
@@ -93,7 +94,14 @@ public class CharecterController : MonoBehaviour
 
             if (dashingDir == Vector2.zero)
             {
-                Debug.Log("dash no direction");
+                if (FacingRight)
+                {
+                    dashingDir = new Vector2(1, 0);
+                }
+                else
+                {
+                    dashingDir = new Vector2(-1, 0);
+                }
             }
             timeManager.ResetTime();
             cameraController.FinishedDash();
@@ -153,10 +161,7 @@ public class CharecterController : MonoBehaviour
 
             }
            
-            if (slowDownLength >= 0 && Input.GetKey(KeyCode.LeftShift))
-            {
-                slowDownLength -= Time.unscaledDeltaTime;
-            }
+            
 
             
             #endregion
@@ -205,6 +210,10 @@ public class CharecterController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (slowDownLength >= 0)
+        {
+            slowDownLength -= Time.unscaledDeltaTime;
+        }
         if (MeleeAttackManager.canAction)
         {
             #region Speed
@@ -315,6 +324,7 @@ public class CharecterController : MonoBehaviour
     }
     private void beginDashSlow()
     {
+        slowDownLength = 2f;
         Debug.Log("TimeSlow");
         cameraController.IsDashing();
         timeManager.SlowDownTime();

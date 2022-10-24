@@ -173,7 +173,9 @@ MonoBehaviour:
   damageable: 1
   giveUpwardForce: 1
   bounceCollide: 1
+  giveDashReset: 1
   health: 1
+  bounceMult: 7
 --- !u!61 &324012995
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -668,7 +670,9 @@ MonoBehaviour:
   damageable: 1
   giveUpwardForce: 1
   bounceCollide: 0
+  giveDashReset: 0
   health: 1
+  bounceMult: 0
 --- !u!61 &587062192
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1050,7 +1054,9 @@ MonoBehaviour:
   damageable: 1
   giveUpwardForce: 1
   bounceCollide: 1
+  giveDashReset: 1
   health: 1
+  bounceMult: 1.5
 --- !u!1 &742175224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1304,7 +1310,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 1
   rb: {fileID: 0}
-  bounceMult: 4
 --- !u!1 &1204237090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,7 +1493,9 @@ MonoBehaviour:
   damageable: 1
   giveUpwardForce: 1
   bounceCollide: 1
+  giveDashReset: 0
   health: 1
+  bounceMult: 1.5
 --- !u!61 &1573058090
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1736,6 +1743,7 @@ MonoBehaviour:
   isGrounded: 0
   moveDirection: 0
   isJumping: 0
+  canDash: 0
   rotationOnJump: 0
   timeManager: {fileID: 0}
   Camera: {fileID: 519420028}
@@ -2019,7 +2027,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 1
   rb: {fileID: 0}
-  bounceMult: 1.75
 --- !u!1 &2037359313
 GameObject:
   m_ObjectHideFlags: 0

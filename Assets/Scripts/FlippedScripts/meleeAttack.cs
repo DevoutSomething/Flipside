@@ -13,8 +13,7 @@ public class meleeAttack : MonoBehaviour
     private bool downwardStrike;
     private CharecterController characterController;
     private bool bounceMultActive;
-    public float bounceMult;
-
+    private float bounceMult;
     private void Start()
     {
         characterController = GetComponentInParent<CharecterController>();
@@ -34,6 +33,7 @@ public class meleeAttack : MonoBehaviour
     }
     void HandleCollision(enemyHealth objHealth)
     {
+        
         if(objHealth.giveUpwardForce && Input.GetAxis("Vertical")< 0 && !characterController.isGrounded && objHealth.bounceCollide)
         {
             bounceMultActive = true;
@@ -86,6 +86,12 @@ public class meleeAttack : MonoBehaviour
             }
         }
         objHealth.Damage(damageAmount);
+        bounceMult = objHealth.bounceMult;
+        if(objHealth.giveDashReset)
+        {
+            characterController.canDash = true;
+            Debug.Log("gave dash");
+        }
         StartCoroutine(NoLongerColliding());
     }
 
