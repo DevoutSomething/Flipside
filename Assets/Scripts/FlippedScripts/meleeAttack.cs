@@ -14,6 +14,8 @@ public class meleeAttack : MonoBehaviour
     private CharecterController characterController;
     private bool bounceMultActive;
     private float bounceMult;
+    public float groundMult;
+    private float mult;
     private void Start()
     {
         characterController = GetComponentInParent<CharecterController>();
@@ -97,34 +99,30 @@ public class meleeAttack : MonoBehaviour
 
     private void HandleMovment()
     {
+        if (characterController.isGrounded)
+        {
+            mult = groundMult;
+        }
+        else
+        {
+            mult = 1;
+        }
+        if (bounceMultActive)
+        {
+            bounceMultActive = false;
+            mult = mult * bounceMult;
+        }
         if (collided)
         {
             if (downwardStrike)
             {
                 rb.velocity = new Vector2(0, 0);
-                if (bounceMultActive)
-                {
-                    rb.AddForce(direction * (MeleeAttackManager.upwardsForce * bounceMult));
-                    bounceMultActive = false;
-                }
-                else
-                {
-                    rb.AddForce(direction * MeleeAttackManager.upwardsForce);
-                }
-                
+                rb.AddForce(direction * MeleeAttackManager.upwardsForce * mult);
             }
             else
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
-                if (bounceMultActive)
-                {
-                    rb.AddForce(direction * MeleeAttackManager.defaultForce * bounceMult);
-                    bounceMultActive = false;
-                }
-                else
-                {
-                    rb.AddForce(direction * MeleeAttackManager.defaultForce);
-                }
+                    rb.AddForce(direction * MeleeAttackManager.upwardsForce * mult);
             }
             collided = false;
         }

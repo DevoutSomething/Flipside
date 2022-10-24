@@ -80,6 +80,7 @@ public class CharecterController : MonoBehaviour
         playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
         slowDownLength = 2f;
+
     }
     private void Update()
     {
@@ -115,7 +116,7 @@ public class CharecterController : MonoBehaviour
             rb.velocity = dashingDir.normalized * dashSpeed;
             return;
         }
-        if (MeleeAttackManager.canAction)
+        if (MeleeAttackManager.canAction && MeleeAttackManager.canAttack)
         {
             moveDirection = Input.GetAxis("Horizontal");
             if (moveDirection > 0)
@@ -160,33 +161,30 @@ public class CharecterController : MonoBehaviour
                 beginDashSlow();
 
             }
-           
-            
 
-            
+
+
+
             #endregion
-
             #region Jump
-            if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing)
+  
+            if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing && canJump || Input.GetButtonDown("Jump") && isGrounded && lastTimeGrounded < CoyoteTime && !isJumping && canJump)
             {
+                canJump = false;
                 isJumping = true;
                 Jump();
                 Debug.Log("jumped");
+                
+            }
+            if (jumpBufferTemp > 0 && !isJumping)
+            {
+                jumpBufferTemp -= Time.deltaTime;
             }
             else if (Input.GetButtonDown("Jump") && !isGrounded && !isJumping)
             {
                 jumpBufferTemp = jumpBufferTime;
             }
-            if (jumpBufferTemp > 0 && !isJumping)
-            {
-                jumpBufferTemp -= Time.deltaTime;
-                if (isGrounded && lastTimeGrounded < CoyoteTime && !isJumping)
-                {
-                    jumpBufferTemp = 0;
-                    Jump();
-                    Debug.Log("Jumped with buffer");
-                }
-            }
+     
             if (isJumping && Input.GetButtonUp("Jump") && !isDashing)
             {
                 onJumpUp();
@@ -214,7 +212,7 @@ public class CharecterController : MonoBehaviour
         {
             slowDownLength -= Time.unscaledDeltaTime;
         }
-        if (MeleeAttackManager.canAction)
+        if (MeleeAttackManager.canAction && MeleeAttackManager.canAttack)
         {
             #region Speed
             float targetSpeed = moveDirection * moveSpeed;
@@ -271,6 +269,7 @@ public class CharecterController : MonoBehaviour
             lastTimeGrounded = 0;
             isGrounded = true;
             canDash = true;
+            canJump = true;
         }
         else if (!isGrounded)
         {
@@ -314,7 +313,7 @@ public class CharecterController : MonoBehaviour
         if (rb.velocity.y > 0)
         {
             rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCut), ForceMode2D.Impulse);
-            isJumping = false;
+            StartCoroutine(jumpReset());
         }
     }
 
@@ -338,6 +337,12 @@ public class CharecterController : MonoBehaviour
         isActuallyDashing = false;
         MeleeAttackManager.canAction = true;
         onJumpUp();
+    }
+    private IEnumerator jumpReset()
+    {
+        yield return new WaitForSecondsRealtime(.1f);
+        canJump = true;
+        isJumping = false;
     }
 }
 
