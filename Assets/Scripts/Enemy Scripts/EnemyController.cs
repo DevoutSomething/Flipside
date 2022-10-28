@@ -4,45 +4,53 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    private bool facingRight;
+    public bool facingRight;
     private bool canSeePlayer;
     public Collider2D wallColider;
     public Collider2D floorColider;
-    public float timePerm = 1;
-    private float timer;
+    public float turnTimePerm = 1;
+    [SerializeField] private float turnTimer;
+    public float speed;
 
     private void Start()
     {
-        float timer = timePerm;
+        turnTimer = turnTimePerm;
     }
     void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        MoveForward();
+        if (turnTimer > 0)
         {
-            TurnAround();
-            timer = timePerm;
+            turnTimer -= Time.deltaTime;
         }
     }
-
-    private void CheckForGround()
+    public void TurnAround()
     {
-
-    }
-    private void CheckForWall()
-    {
-
-    }
-    private void TurnAround()
-    {
-        transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
-        if (transform.localScale.x < 0)
+        if (turnTimer <= 0)
         {
-            facingRight = true;
+            Debug.Log("turn around");
+            transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
+            if (transform.localScale.x < 0)
+            {
+                facingRight = true;
+            }
+            else
+            {
+                facingRight = false;
+            }
+            turnTimer = turnTimePerm;
         }
-        else
+    }
+    private void MoveForward()
+    {
+        if (facingRight)
         {
-            facingRight = false;
+            transform.Translate(Vector2.right * speed * Time.deltaTime);
         }
+        if (!facingRight)
+        {
+            transform.Translate(Vector2.left * speed * Time.deltaTime);
+        }
+        
     }
 }

@@ -394,9 +394,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f134e69837af94daf7ae372b4ab7d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  facingRight: 0
   wallColider: {fileID: 905603140}
   floorColider: {fileID: 1795778051}
-  timePerm: 1
+  turnTimePerm: 1
+  turnTimer: 0
+  speed: 1
 --- !u!212 &565269084
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -597,6 +600,7 @@ GameObject:
   - component: {fileID: 905603139}
   - component: {fileID: 905603140}
   - component: {fileID: 905603141}
+  - component: {fileID: 905603142}
   m_Layer: 0
   m_Name: wallDetection
   m_TagString: Untagged
@@ -657,6 +661,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c4421978b7fcb4fab3dd74bdf36767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Checkingfor: 1
+  parent: {fileID: 565269082}
+--- !u!50 &905603142
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905603138}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!4 &962383735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 759593824828645483, guid: 25328a37935b45943bf0702e0f0c0aae, type: 3}
@@ -750,6 +777,7 @@ MonoBehaviour:
   isGrounded: 0
   moveDirection: 0
   isJumping: 0
+  canDash: 0
   rotationOnJump: 0
   timeManager: {fileID: 1527359136}
   Camera: {fileID: 1668915193}
@@ -5506,6 +5534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c4421978b7fcb4fab3dd74bdf36767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Checkingfor: 2
+  parent: {fileID: 565269082}
 --- !u!1 &2052127254
 GameObject:
   m_ObjectHideFlags: 0
