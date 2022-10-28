@@ -16,6 +16,12 @@ public class meleeAttack : MonoBehaviour
     private float bounceMult;
     public float groundMult;
     private float mult;
+    private float multiHitMult = 1;
+    public float multiHitMultAddition;
+    public float upForceOnSide;
+    private bool EnemyHitDie;
+    private bool UpStrike;
+
     private void Start()
     {
         characterController = GetComponentInParent<CharecterController>();
@@ -24,7 +30,7 @@ public class meleeAttack : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        HandleMovment();
+        HandleMovement();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -54,15 +60,17 @@ public class meleeAttack : MonoBehaviour
             bounceMultActive = true;
             direction = Vector2.down;
             collided = true;
+            UpStrike = true;
         }
 
         else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded)
         {
             direction = Vector2.down;
             collided = true;
+            UpStrike = true;
         }
-       
-            if ((Input.GetAxis("Vertical") <= 0 && characterController.isGrounded) || Input.GetAxis("Vertical") == 0)
+
+        if ((Input.GetAxis("Vertical") <= 0 && characterController.isGrounded) || Input.GetAxis("Vertical") == 0)
         {
             if (characterController.FacingRight && objHealth.bounceCollide)
             {
@@ -88,6 +96,14 @@ public class meleeAttack : MonoBehaviour
             }
         }
         objHealth.Damage(damageAmount);
+        if (objHealth.damageable)
+        {
+            EnemyHitDie = true;
+        }
+        else
+        {
+            EnemyHitDie = false;
+        }
         bounceMult = objHealth.bounceMult;
         if(objHealth.giveDashReset)
         {
@@ -97,34 +113,48 @@ public class meleeAttack : MonoBehaviour
         StartCoroutine(NoLongerColliding());
     }
 
-    private void HandleMovment()
+    private void HandleMovement()
     {
         if (characterController.isGrounded)
         {
             mult = groundMult;
         }
-        else
-        {
-            mult = 1;
-        }
-        if (bounceMultActive)
+        else if (bounceMultActive)
         {
             bounceMultActive = false;
             mult = mult * bounceMult;
         }
+        else
+        {
+            mult = 1;
+        }
+       
         if (collided)
         {
             if (downwardStrike)
             {
-                rb.velocity = new Vector2(0, 0);
+                rb.velocity = new Vector2(rb.velocity.x * .1f, 0);
                 rb.AddForce(direction * MeleeAttackManager.upwardsForce * mult);
+            }
+            else if (characterController.isGrounded && UpStrike)
+            {
+                rb.AddForce(-direction * MeleeAttackManager.upwardsForce * mult);
             }
             else
             {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-                    rb.AddForce(direction * MeleeAttackManager.upwardsForce * mult);
+                Vector2 Y = new Vector2(0, 1);
+                if (EnemyHitDie)
+                {
+                    rb.AddForce(-direction * MeleeAttackManager.defaultForce * mult * multiHitMult);
+                    rb.AddForce(Y * upForceOnSide * mult);
+                }
+                else
+                {
+                    rb.AddForce(direction * MeleeAttackManager.defaultForce * mult * multiHitMult);
+                }
             }
             collided = false;
+            multiHitMult -= multiHitMultAddition;
         }
     }
     private IEnumerator NoLongerColliding()
@@ -132,7 +162,7 @@ public class meleeAttack : MonoBehaviour
         yield return new WaitForSecondsRealtime(MeleeAttackManager.movementTime);
         collided = false;
         downwardStrike = false;
-        
+        multiHitMult = 1f;
     }
     
 
