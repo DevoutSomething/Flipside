@@ -17,6 +17,8 @@ public class meleeAttackManager : MonoBehaviour
     private Animator anim;
     private CharecterController charecterController;
     private Rigidbody2D rb;
+    public bool canTransitionState;
+    public float timeCantTransition;
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -31,17 +33,36 @@ public class meleeAttackManager : MonoBehaviour
     }
     private void CheckInput()
     {
-        if (Input.GetButtonDown("Fire2")  && canAttack && canAction)    
+        if (Input.GetButtonDown("Fire2") && canAction)    
         {
             meleeAttack = true;
-            canAttack = false;
             canAction = false;
             Debug.Log("working melee");
-            StartCoroutine(AttackCooldown());
+            canAction = false;
             StartCoroutine(AttackNoAction());
             if (charecterController.isGrounded)
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+        }
+        else if (Input.GetButtonDown("Fire2") && canTransitionState)
+        {
+            bool canTrans = anim.GetBool("CanTransition");
+            bool forAttack = anim.GetBool("ForwardAttack");
+            bool downAttack = anim.GetBool("DownwardAttack");
+            bool upAttack = anim.GetBool("UpwardAttack");
+            bool jump = anim.GetBool("Jump");
+            bool run = anim.GetBool("Run");
+            StartCoroutine(AttackNoAction());
+            if(canTrans && forAttack && Input.GetAxis("Vertical") != 0)
+            {
+                anim.SetBool("UpwardAttack", true);
+                meleeAnimator.SetTrigger("AttackUp");
+            }
+            if (canTrans && upAttack && meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
+            {
+                anim.SetBool("DownwardAttack", true);
+                meleeAnimator.SetTrigger("AttackDown");
             }
         }
         else
@@ -51,37 +72,31 @@ public class meleeAttackManager : MonoBehaviour
 
         if(meleeAttack && Input.GetAxis("Vertical") > 0)
         {
-            anim.SetTrigger("UpwardAttack");
+            anim.SetBool("UpwardAttack", true);
             meleeAnimator.SetTrigger("AttackUp");
-            
-            Debug.Log("1");
         }
         if(meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
-            anim.SetTrigger("DownwardAttack");
+            anim.SetBool("DownwardAttack", true);
             meleeAnimator.SetTrigger("AttackDown");
-
-            Debug.Log("2");
         }
         if(meleeAttack && Input.GetAxis("Vertical") == 0 || meleeAttack && (Input.GetAxis("Vertical") < 0 && charecterController.isGrounded))
         {
-            anim.SetTrigger("ForwardAttack");
+            anim.SetBool("ForwardAttack", true);
             meleeAnimator.SetTrigger("AttackSide");
-            Debug.Log("3");
         }
     }
 
-    private IEnumerator AttackCooldown()
-    {
-        yield return new WaitForSecondsRealtime(attackCooldown);
-        canAttack = true;
-
-    }
     private IEnumerator AttackNoAction()
     {
         yield return new WaitForSecondsRealtime(timeCantAction);
         canAction = true;
 
+    }
+    private IEnumerator AttackTransition()
+    {
+        yield return new WaitForSecondsRealtime(timeCantTransition);
+        canTransitionState = true;
     }
    
 }
