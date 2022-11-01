@@ -2087,6 +2087,8 @@ MonoBehaviour:
   timeCantAction: 0.4
   canAction: 0
   canAttack: 0
+  canTransitionState: 0
+  timeCantTransition: 0
 --- !u!1 &1883271745
 GameObject:
   m_ObjectHideFlags: 0

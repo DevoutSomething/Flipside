@@ -64,10 +64,20 @@ public class meleeAttackManager : MonoBehaviour
                 anim.SetBool("DownwardAttack", true);
                 meleeAnimator.SetTrigger("AttackDown");
             }
+            if(canTrans && forAttack && jump)
+            {
+                anim.SetBool("Jump", true);
+
+            }
         }
         else
         {
             meleeAttack = false;
+            anim.SetBool("UpwardAttack", false);
+            anim.SetBool("DownwardAttack", false);
+            anim.SetBool("ForwardAttack", false);
+            anim.SetBool("ForwardAttack", false);
+            anim.SetBool("Jump", false);
         }
 
         if(meleeAttack && Input.GetAxis("Vertical") > 0)
