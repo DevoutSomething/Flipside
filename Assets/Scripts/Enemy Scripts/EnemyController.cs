@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public LayerMask groundLayer;
+    private BoxCollider2D boxCollider2d;
     public bool facingRight;
     private bool canSeePlayer;
-    public Collider2D wallColider;
-    public Collider2D floorColider;
     public float turnTimePerm = 1;
     [SerializeField] private float turnTimer;
     public float speed;
+    public float rayDistance;
+    public GameObject rayObject;
 
     private void Start()
     {
+        boxCollider2d = transform.GetComponent<BoxCollider2D>();
         turnTimer = turnTimePerm;
     }
     void Update()
@@ -22,6 +25,30 @@ public class EnemyController : MonoBehaviour
         if (turnTimer > 0)
         {
             turnTimer -= Time.deltaTime;
+        }
+        Checkwalls();
+    }
+    private void Checkwalls()
+    {
+        float leftMultiply;
+        if (facingRight)
+        {
+            leftMultiply = 1;
+        }
+        else
+        {
+            leftMultiply = -1;
+        }
+        RaycastHit2D raycastHit = Physics2D.Raycast(rayObject.transform.position, Vector2.right * leftMultiply, rayDistance, groundLayer);
+        {
+            if (raycastHit.collider != null)
+            {
+                Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.red);
+            }
+            else
+            {
+                Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.green);
+            }
         }
     }
     public void TurnAround()
