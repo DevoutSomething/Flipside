@@ -5,6 +5,7 @@ using UnityEngine;
 public class meleeAttack : MonoBehaviour
 {
     //archer fucked up
+    //archer fucked up again
     [SerializeField]
     private int damageAmount = 1;
     [SerializeField] private Rigidbody2D rb;

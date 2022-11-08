@@ -7,6 +7,7 @@ public class CharecterController : MonoBehaviour
 {
 
     //archer fucked up
+    //archer fucked up again
     public bool colideWithTilemap;
     [Header("Speed")]
     public float moveSpeed;
