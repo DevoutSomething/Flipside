@@ -12,12 +12,14 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float turnTimer;
     public float speed;
     public float rayDistance;
+    public float turnDistance;
     public GameObject rayObject;
 
     private void Start()
     {
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
-        turnTimer = turnTimePerm;
+        turnTimer = 0;
+        //TurnAround();
     }
     void Update()
     {
@@ -40,15 +42,17 @@ public class EnemyController : MonoBehaviour
             leftMultiply = -1;
         }
         RaycastHit2D raycastHit = Physics2D.Raycast(rayObject.transform.position, Vector2.right * leftMultiply, rayDistance, groundLayer);
+        if (raycastHit.collider != null)
         {
-            if (raycastHit.collider != null)
+            Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.red);
+            if (raycastHit.distance < turnDistance)
             {
-                Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.red);
+                TurnAround();
             }
-            else
-            {
-                Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.green);
-            }
+        }
+        else
+        {
+            Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * rayDistance, Color.green);
         }
     }
     public void TurnAround()
