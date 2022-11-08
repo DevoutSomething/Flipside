@@ -18,6 +18,7 @@ public class enemyHealth : MonoBehaviour
 
     public void Damage(int amount)
     {
+        //checks if enemy can take damage
         if(damageable && currentHealth > 0)
         {
             currentHealth -= amount;

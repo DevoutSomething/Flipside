@@ -34,6 +34,7 @@ public class meleeAttack : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //checks what enemy is hit
         if (collision.GetComponent<enemyHealth>())
         {
             HandleCollision(collision.GetComponent<enemyHealth>());
@@ -41,7 +42,7 @@ public class meleeAttack : MonoBehaviour
     }
     void HandleCollision(enemyHealth objHealth)
     {
-        
+        //processes what kind of thing collided with
         if(objHealth.giveUpwardForce && Input.GetAxis("Vertical")< 0 && !characterController.isGrounded && objHealth.bounceCollide)
         {
             bounceMultActive = true;
