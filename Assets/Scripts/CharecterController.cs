@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharecterController : MonoBehaviour
 {
 
-
+    //archer fucked up
     public bool colideWithTilemap;
     [Header("Speed")]
     public float moveSpeed;
