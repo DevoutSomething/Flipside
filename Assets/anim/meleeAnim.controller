@@ -125,25 +125,25 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: AttackDown
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: AttackSide
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: AttackUpAir
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -367,10 +367,7 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: AttackUpAir
-    m_EventTreshold: 0
+  m_Conditions: []
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1748747225454381611}
   m_Solo: 0
@@ -402,13 +399,13 @@ AnimatorStateMachine:
     m_Position: {x: 60, y: -130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5284080450178585489}
-    m_Position: {x: 880, y: 50, z: 0}
+    m_Position: {x: 710, y: -50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2848372808476587968}
-    m_Position: {x: 490, y: -150, z: 0}
+    m_Position: {x: 360, y: -300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5142975974718876078}
-    m_Position: {x: 660, y: -70, z: 0}
+    m_Position: {x: 640, y: -220, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 1107422826709326135}

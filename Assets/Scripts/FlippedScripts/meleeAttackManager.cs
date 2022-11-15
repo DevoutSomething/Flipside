@@ -30,6 +30,7 @@ public class meleeAttackManager : MonoBehaviour
     private void Update()
     {
         CheckInput();
+        
     }
     private void CheckInput()
     {
@@ -51,6 +52,7 @@ public class meleeAttackManager : MonoBehaviour
             bool forAttack = anim.GetBool("ForwardAttack");
             bool downAttack = anim.GetBool("DownwardAttack");
             bool upAttack = anim.GetBool("UpwardAttack");
+            bool upAttackAir = anim.GetBool("UpwardAttackAir");
             bool jump = anim.GetBool("Jump");
             bool run = anim.GetBool("Run");
             StartCoroutine(AttackNoAction());
@@ -61,6 +63,7 @@ public class meleeAttackManager : MonoBehaviour
             }
             if (canTrans && upAttack && meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
             {
+                anim.SetBool("UpwardAttackAir", false);
                 anim.SetBool("DownwardAttack", true);
                 meleeAnimator.SetTrigger("AttackDown");
             }
@@ -71,17 +74,26 @@ public class meleeAttackManager : MonoBehaviour
             meleeAttack = false;
             anim.SetBool("UpwardAttack", false);
             anim.SetBool("DownwardAttack", false);
+            anim.SetBool("ForwardAttack", false);                                               
             anim.SetBool("ForwardAttack", false);
-            anim.SetBool("ForwardAttack", false);
-          
+            anim.SetBool("UpwardAttackAir", false);
+
         }
 
-        if(meleeAttack && Input.GetAxis("Vertical") > 0)
+
+        if (meleeAttack && Input.GetAxis("Vertical") > 0 && !charecterController.isGrounded)
+        {
+            anim.SetBool("UpwardAttackAir", true);
+            meleeAnimator.SetTrigger("AttackUpAir");
+           
+        }
+        if(meleeAttack && Input.GetAxis("Vertical") > 0 && charecterController.isGrounded   )
         {
             anim.SetBool("UpwardAttack", true);
             meleeAnimator.SetTrigger("AttackUp");
         }
-        if(meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
+        
+            if (meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
             anim.SetBool("DownwardAttack", true);
             meleeAnimator.SetTrigger("AttackDown");
