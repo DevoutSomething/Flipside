@@ -39,19 +39,20 @@ public class CharecterController : MonoBehaviour
     public float dashDiagnalMod;
     public float dashTime;
     private Vector2 dashingDir;
+    public bool hasDashedAir;
 
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
     [SerializeField] public bool isGrounded;
     [SerializeField] private float moveDirection;
+    private bool canResetDash;
+    public bool canResetJump;
     private Rigidbody2D rb;
     [SerializeField] private bool isJumping;
     private bool isDashing;
     private bool isActuallyDashing;
     public bool canDash;
-    private float directionX;
-    private float directionY;
     private CameraController cameraController;
 
     [Header("set to zero")]
@@ -69,7 +70,6 @@ public class CharecterController : MonoBehaviour
     private meleeAttackManager MeleeAttackManager;
     //[Header("Private Variables")]
 
-
     private void Start()
     {
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
@@ -81,14 +81,16 @@ public class CharecterController : MonoBehaviour
         playerAnim = gameObject.GetComponentInChildren<Animator>();
         canDash = true;
         slowDownLength = 2f;
-
+        hasDashedAir = false;
     }
     private void Update()
     {
+        groundCheck();
         var dashInput = Input.GetButtonDown("Dash");
         var dashInputUp = Input.GetButtonUp("Dash");
         if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
         {
+            hasDashedAir = true;
             slowDownLength = 2;
             isDashing = false;
             isActuallyDashing = true;
@@ -156,6 +158,7 @@ public class CharecterController : MonoBehaviour
 
             if (dashInput && canDash)
             {
+                canResetDash = false;
                 canDash = false;
                 isDashing = true;
                 MeleeAttackManager.canAction = false;
@@ -173,8 +176,9 @@ public class CharecterController : MonoBehaviour
             {
                 canJump = false;
                 isJumping = true;
+                canResetJump = false;
                 Jump();
-                Debug.Log("jumped");
+                Debug.Log("jumped no buffer");
                 
             }
             if (jumpBufferTemp > 0 && !isJumping)
@@ -238,10 +242,6 @@ public class CharecterController : MonoBehaviour
         #endregion
 
 
-        if (!colideWithTilemap) 
-        { 
-            groundCheck(); 
-        }
     }
     private void Jump()
     {
@@ -269,13 +269,20 @@ public class CharecterController : MonoBehaviour
         {
             lastTimeGrounded = 0;
             isGrounded = true;
-            canDash = true;
-            canJump = true;
+            if (canResetJump)
+            {
+                canJump = true;
+            }
+            if (canResetDash)
+            {
+                canDash = true;
+            }
         }
         else if (!isGrounded)
         {
             //Debug.Log(raycastHit.collider);
             lastTimeGrounded += Time.deltaTime;
+            hasDashedAir = false;
         }
         else
         {
@@ -309,12 +316,12 @@ public class CharecterController : MonoBehaviour
         }
     }
 
-    private void onJumpUp()
+    public void onJumpUp()
     {
-        if (rb.velocity.y > 0)
+        if (rb.velocity.y > 0 && !hasDashedAir)
         {
             rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCut), ForceMode2D.Impulse);
-            StartCoroutine(jumpReset());
+            StartCoroutine(CanJumpReset());
         }
     }
 
@@ -324,6 +331,7 @@ public class CharecterController : MonoBehaviour
     }
     private void beginDashSlow()
     {
+        canResetDash = false;
         slowDownLength = 2f;
         Debug.Log("TimeSlow");
         cameraController.IsDashing();
@@ -334,9 +342,11 @@ public class CharecterController : MonoBehaviour
     private IEnumerator StopDashing()
     {
         yield return new WaitForSecondsRealtime(dashTime);
+        
         isDashing = false;
         isActuallyDashing = false;
         MeleeAttackManager.canAction = true;
+        canResetDash = true;
         onJumpUp();
     }
     private IEnumerator jumpReset()
@@ -344,6 +354,11 @@ public class CharecterController : MonoBehaviour
         yield return new WaitForSecondsRealtime(.1f);
         canJump = true;
         isJumping = false;
+    }
+    private IEnumerator CanJumpReset()
+    {
+        yield return new WaitForSecondsRealtime(.15f);
+        canResetJump = true;
     }
 }
 
