@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public LayerMask groundLayer;
+    public LayerMask playerLayer;
     private BoxCollider2D boxCollider2d;
     public bool facingRight;
     private bool canSeePlayer;
@@ -13,18 +14,21 @@ public class EnemyController : MonoBehaviour
     public float speed;
     public float rayDistance;
     public float turnDistance;
+    public float playerSearchDistance;
     public GameObject raySWall;
     public GameObject rayWall;
     public GameObject rayFloor;
+    public GameObject rayPlayer;
     [SerializeField] private bool seeSW;
     [SerializeField] private bool seeW;
-    private bool seeF;
     private Rigidbody2D rb;
     public float jumpForce;
     public float jumpTimerPerm;
     private float jumpTimer;
-    private bool isJumping;
     public float floorCheckOfset;
+    public bool seePlayerR;
+    public bool seePlayerL;
+    public float chargeMultiplyer;
     
 
     private void Start()
@@ -45,6 +49,7 @@ public class EnemyController : MonoBehaviour
             jumpTimer -= Time.deltaTime;
         }
         Checkwalls();
+        LookForPlayer();
     }
     private void Checkwalls()
     {
@@ -99,12 +104,10 @@ public class EnemyController : MonoBehaviour
         if (raycastHitF.collider != null)
         {
             Debug.DrawRay(fRayStartPoint, Vector2.down * raycastHitF.distance, Color.green);
-            seeF = true;
         }
         else
         {
             Debug.DrawRay(fRayStartPoint, Vector2.down * rayDistance, Color.red);
-            seeF = false;
             TurnAround();
         }
         #endregion
@@ -125,23 +128,32 @@ public class EnemyController : MonoBehaviour
         transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
         if (transform.localScale.x < 0)
         {
-            facingRight = true;
+            facingRight = false;
         }
         else
         {
-            facingRight = false;
+            facingRight = true;
         }
         turnTimer = turnTimePerm;
     }
     private void MoveForward()
     {
+        float moveSpeed;
+        if (canSeePlayer)
+        {
+            moveSpeed = speed * chargeMultiplyer;
+        }
+        else
+        {
+            moveSpeed = speed;
+        }
         if (facingRight)
         {
-            transform.Translate(Vector2.right * speed * Time.deltaTime);
+            transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
         }
         if (!facingRight)
         {
-            transform.Translate(Vector2.left * speed * Time.deltaTime);
+            transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
         }
         
     }
@@ -152,6 +164,48 @@ public class EnemyController : MonoBehaviour
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jumpTimer = jumpTimerPerm;
+        }
+    }
+    private void LookForPlayer()
+    {
+        
+        RaycastHit2D raycastHitPlayerR = Physics2D.Raycast(rayPlayer.transform.position, Vector2.right, playerSearchDistance, playerLayer);
+        if (raycastHitPlayerR.collider != null)
+        {
+            Debug.DrawRay(rayPlayer.transform.position, Vector2.right * raycastHitPlayerR.distance, Color.red);
+            seePlayerR = true;
+        }
+        else
+        {
+            Debug.DrawRay(rayPlayer.transform.position, Vector2.right * playerSearchDistance, Color.green);
+            seePlayerR = false;
+        }
+        RaycastHit2D raycastHitPlayerL = Physics2D.Raycast(rayPlayer.transform.position, Vector2.left, playerSearchDistance, playerLayer);
+        if (raycastHitPlayerL.collider != null)
+        {
+            Debug.DrawRay(rayPlayer.transform.position, Vector2.left * raycastHitPlayerL.distance, Color.red);
+            seePlayerL = true;
+        }
+        else
+        {
+            Debug.DrawRay(rayPlayer.transform.position, Vector2.left * playerSearchDistance, Color.green);
+            seePlayerL = false;
+        }
+        if (seePlayerR || seePlayerL)
+        {
+            canSeePlayer = true;
+        }
+        if (!seePlayerL && !seePlayerR)
+        {
+            canSeePlayer = false;
+        }
+        if (facingRight && seePlayerL)
+        {
+            TurnAround();
+        }
+        if (!facingRight && seePlayerR)
+        {
+            TurnAround();
         }
     }
 }
