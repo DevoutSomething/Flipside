@@ -13,13 +13,25 @@ public class EnemyController : MonoBehaviour
     public float speed;
     public float rayDistance;
     public float turnDistance;
-    public GameObject rayObject;
+    public GameObject raySWall;
+    public GameObject rayWall;
+    public GameObject rayFloor;
+    [SerializeField] private bool seeSW;
+    [SerializeField] private bool seeW;
+    private bool seeF;
+    private Rigidbody2D rb;
+    public float jumpForce;
+    public float jumpTimerPerm;
+    private float jumpTimer;
+    private bool isJumping;
+    public float floorCheckOfset;
+    
 
     private void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
         turnTimer = 0;
-        //TurnAround();
     }
     void Update()
     {
@@ -28,10 +40,15 @@ public class EnemyController : MonoBehaviour
         {
             turnTimer -= Time.deltaTime;
         }
+        if (jumpTimer > 0)
+        {
+            jumpTimer -= Time.deltaTime;
+        }
         Checkwalls();
     }
     private void Checkwalls()
     {
+        #region Direction
         float leftMultiply;
         if (facingRight)
         {
@@ -41,36 +58,80 @@ public class EnemyController : MonoBehaviour
         {
             leftMultiply = -1;
         }
-        RaycastHit2D raycastHit = Physics2D.Raycast(rayObject.transform.position, Vector2.right * leftMultiply, rayDistance, groundLayer);
-        if (raycastHit.collider != null)
+        #endregion
+        #region CheckShortWall
+        RaycastHit2D raycastHitSW = Physics2D.Raycast(raySWall.transform.position, Vector2.right * leftMultiply, rayDistance, groundLayer);
+        if (raycastHitSW.collider != null)
         {
-            Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * raycastHit.distance, Color.red);
-            if (raycastHit.distance < turnDistance)
+            Debug.DrawRay(raySWall.transform.position, Vector2.right * leftMultiply * raycastHitSW.distance, Color.red);
+            if (raycastHitSW.distance < turnDistance)
             {
-                TurnAround();
+                seeSW = true;
             }
         }
         else
         {
-            Debug.DrawRay(rayObject.transform.position, Vector2.right * leftMultiply * rayDistance, Color.green);
+            Debug.DrawRay(raySWall.transform.position, Vector2.right * leftMultiply * rayDistance, Color.green);
+            seeSW = false;
         }
+        #endregion
+        #region CheckWall
+        RaycastHit2D raycastHitW = Physics2D.Raycast(rayWall.transform.position, Vector2.right * leftMultiply, rayDistance, groundLayer);
+        if (raycastHitW.collider != null)
+        {
+            Debug.DrawRay(rayWall.transform.position, Vector2.right * leftMultiply * raycastHitW.distance, Color.red);
+            if (raycastHitW.distance < turnDistance)
+            {
+                seeW = true;
+            }
+        }
+        else
+        {
+            Debug.DrawRay(rayWall.transform.position, Vector2.right * leftMultiply * rayDistance, Color.green);
+            seeW = false;
+        }
+        #endregion
+        #region CheckFloor
+        Vector2 fRayStartPoint;
+        fRayStartPoint = rayFloor.transform.position;
+        fRayStartPoint.x = rayFloor.transform.position.x + (floorCheckOfset * leftMultiply);
+        RaycastHit2D raycastHitF = Physics2D.Raycast(fRayStartPoint, Vector2.down, rayDistance, groundLayer);
+        if (raycastHitF.collider != null)
+        {
+            Debug.DrawRay(fRayStartPoint, Vector2.down * raycastHitF.distance, Color.green);
+            seeF = true;
+        }
+        else
+        {
+            Debug.DrawRay(fRayStartPoint, Vector2.down * rayDistance, Color.red);
+            seeF = false;
+            TurnAround();
+        }
+        #endregion
+        #region Reaction
+        if (seeW)
+        {
+            TurnAround();
+        }
+        if (!seeW && seeSW)
+        {
+            Jump();
+        }
+        #endregion
     }
     public void TurnAround()
     {
-        if (turnTimer <= 0)
+        Debug.Log("turn around");
+        transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
+        if (transform.localScale.x < 0)
         {
-            Debug.Log("turn around");
-            transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
-            if (transform.localScale.x < 0)
-            {
-                facingRight = true;
-            }
-            else
-            {
-                facingRight = false;
-            }
-            turnTimer = turnTimePerm;
+            facingRight = true;
         }
+        else
+        {
+            facingRight = false;
+        }
+        turnTimer = turnTimePerm;
     }
     private void MoveForward()
     {
@@ -83,5 +144,14 @@ public class EnemyController : MonoBehaviour
             transform.Translate(Vector2.left * speed * Time.deltaTime);
         }
         
+    }
+    private void Jump()
+    {
+        Debug.Log("Jump");
+        if (jumpTimer <= 0)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            jumpTimer = jumpTimerPerm;
+        }
     }
 }
