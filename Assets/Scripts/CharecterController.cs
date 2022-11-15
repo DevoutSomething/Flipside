@@ -82,6 +82,7 @@ public class CharecterController : MonoBehaviour
         canDash = true;
         slowDownLength = 2f;
         hasDashedAir = false;
+        canResetJump = true;
     }
     private void Update()
     {
@@ -177,6 +178,7 @@ public class CharecterController : MonoBehaviour
                 canJump = false;
                 isJumping = true;
                 canResetJump = false;
+                StartCoroutine(CanJumpReset());
                 Jump();
                 Debug.Log("jumped no buffer");
                 
@@ -184,6 +186,7 @@ public class CharecterController : MonoBehaviour
             if (jumpBufferTemp > 0 && !isJumping)
             {
                 jumpBufferTemp -= Time.deltaTime;
+                StartCoroutine(CanJumpReset());
             }
             else if (Input.GetButtonDown("Jump") && !isGrounded && !isJumping)
             {
@@ -348,6 +351,7 @@ public class CharecterController : MonoBehaviour
         MeleeAttackManager.canAction = true;
         canResetDash = true;
         onJumpUp();
+        canResetJump = true;
     }
     private IEnumerator jumpReset()
     {
