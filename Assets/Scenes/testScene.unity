@@ -2084,7 +2084,7 @@ MonoBehaviour:
   player: {fileID: 1866435954}
   meleeAnimator: {fileID: 1951057269}
   attackCooldown: 0.3
-  timeCantAction: 0.4
+  timeCantAction: 0.1
   canAction: 0
   canAttack: 0
   canTransitionState: 0
