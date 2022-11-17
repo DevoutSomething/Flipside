@@ -85,14 +85,35 @@ public class meleeAttackManager : MonoBehaviour
             anim.SetBool("ForwardAttack", true);
             meleeAnimator.SetTrigger("AttackSide");
         }
-        if(Input.GetAxis("Horizontal") != 0 && charecterController.isGrounded)
+        if(Input.GetAxis("Horizontal") != 0 && charecterController.isGrounded )
         {
-            
+            Debug.Log("archer left me");
+            //ResetAnim();
             anim.SetBool("Run", true);
-            meleeAnimator.SetTrigger("Idle");
+            meleeAnimator.SetBool("Idle2",true);
         }
-    }
+        if (Input.GetButtonDown("Jump") && charecterController.isGrounded)
+        {
+            Debug.Log("Archer saved me");
+            ResetAnim();
+            anim.SetBool("Jump", true);
+            meleeAnimator.SetBool("Idle2", true);
+        }
 
+    }
+    private void ResetAnim()
+    {
+        meleeAttack = false;
+        anim.SetBool("UpwardAttack", false);
+        anim.SetBool("DownwardAttack", false);
+        anim.SetBool("ForwardAttack", false);
+        anim.SetBool("ForwardAttack", false);
+        anim.SetBool("UpwardAttackAir", false);
+        meleeAnimator.ResetTrigger("AttackDown");
+        meleeAnimator.ResetTrigger("AttackSide");
+        meleeAnimator.ResetTrigger("AttackUp");
+        meleeAnimator.ResetTrigger("AttackUpAir");
+    }
     private IEnumerator AttackNoAction()
     {
         yield return new WaitForSecondsRealtime(timeCantAction);
