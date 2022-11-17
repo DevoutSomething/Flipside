@@ -28,6 +28,11 @@ public class CameraController : MonoBehaviour
     public float darkenAtStart;
     public float darkenAtStartPlayerLight;
     public float playerLightLimit;
+    [Header("limits")]
+    public float lowerYLimit;
+    public float upperYLimit;
+    public float lowerXLimit;
+    public float upperXLimit;
     [Header("Private Variables")]
     [SerializeField] private Transform cameraPosition;
     [SerializeField] private Transform currentRoom;
@@ -82,7 +87,22 @@ public class CameraController : MonoBehaviour
         if (!changingRooms)
         {
             Vector3 targetPosition = Player.transform.position + offset;
-            //Vector3 clampedPosition = ClampCamera(targetPosition);
+            if (targetPosition.x > upperXLimit)
+            {
+                targetPosition.x = upperXLimit;
+            }
+            if (targetPosition.x < lowerXLimit)
+            {
+                targetPosition.x = lowerXLimit;
+            }
+            if (targetPosition.y > upperYLimit)
+            {
+                targetPosition.y = upperYLimit;
+            }
+            if (targetPosition.y < lowerYLimit)
+            {
+                targetPosition.y = lowerYLimit;
+            }
             Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             transform.position = smoothPosition;
         }
