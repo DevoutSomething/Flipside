@@ -15,6 +15,7 @@ public class meleeAttackManager : MonoBehaviour
     public bool canAction;
     public bool canAttack;
     private Animator anim;
+   
     private CharecterController charecterController;
     private Rigidbody2D rb;
     public bool canTransitionState;
@@ -25,15 +26,18 @@ public class meleeAttackManager : MonoBehaviour
         canAttack = true;
         canAction = true;
         anim = player.GetComponentInChildren<Animator>();
+        
         charecterController = GetComponent<CharecterController>();
     }
     private void Update()
     {
         CheckInput();
         
+
     }
     private void CheckInput()
     {
+
         if (Input.GetButtonDown("Fire2") && canAction)    
         {
             meleeAttack = true;
@@ -46,29 +50,6 @@ public class meleeAttackManager : MonoBehaviour
                 rb.velocity = new Vector2(0, rb.velocity.y);
             }
         }
-        else if (Input.GetButtonDown("Fire2") && canTransitionState)
-        {
-            bool canTrans = anim.GetBool("CanTransition");
-            bool forAttack = anim.GetBool("ForwardAttack");
-            bool downAttack = anim.GetBool("DownwardAttack");
-            bool upAttack = anim.GetBool("UpwardAttack");
-            bool upAttackAir = anim.GetBool("UpwardAttackAir");
-            bool jump = anim.GetBool("Jump");
-            bool run = anim.GetBool("Run");
-            StartCoroutine(AttackNoAction());
-            if(canTrans && forAttack && Input.GetAxis("Vertical") != 0)
-            {
-                anim.SetBool("UpwardAttack", true);
-                meleeAnimator.SetTrigger("AttackUp");
-            }
-            if (canTrans && upAttack && meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
-            {
-                anim.SetBool("UpwardAttackAir", false);
-                anim.SetBool("DownwardAttack", true);
-                meleeAnimator.SetTrigger("AttackDown");
-            }
-          
-        }
         else
         {
             meleeAttack = false;
@@ -77,6 +58,7 @@ public class meleeAttackManager : MonoBehaviour
             anim.SetBool("ForwardAttack", false);                                               
             anim.SetBool("ForwardAttack", false);
             anim.SetBool("UpwardAttackAir", false);
+            
 
         }
 
@@ -84,7 +66,7 @@ public class meleeAttackManager : MonoBehaviour
         if (meleeAttack && Input.GetAxis("Vertical") > 0 && !charecterController.isGrounded)
         {
             anim.SetBool("UpwardAttackAir", true);
-            meleeAnimator.SetTrigger("AttackUpAir");
+            meleeAnimator.SetTrigger("AttackUpAir"); 
            
         }
         if(meleeAttack && Input.GetAxis("Vertical") > 0 && charecterController.isGrounded   )
@@ -102,6 +84,12 @@ public class meleeAttackManager : MonoBehaviour
         {
             anim.SetBool("ForwardAttack", true);
             meleeAnimator.SetTrigger("AttackSide");
+        }
+        if(Input.GetAxis("Horizontal") != 0 && charecterController.isGrounded)
+        {
+            
+            anim.SetBool("Run", true);
+            meleeAnimator.SetTrigger("Idle");
         }
     }
 
