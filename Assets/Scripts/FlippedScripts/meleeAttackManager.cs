@@ -15,6 +15,7 @@ public class meleeAttackManager : MonoBehaviour
     public bool canAction;
     public bool canAttack;
     private Animator anim;
+    
     private CharecterController charecterController;
     private Rigidbody2D rb;
     public bool canTransitionState;
@@ -31,11 +32,14 @@ public class meleeAttackManager : MonoBehaviour
     {
         CheckInput();
         
+        
+
     }
     private void CheckInput()
     {
         if (Input.GetButtonDown("Fire2") && canAction)    
         {
+             
             meleeAttack = true;
             canAction = false;
             Debug.Log("working melee");
@@ -83,26 +87,49 @@ public class meleeAttackManager : MonoBehaviour
 
         if (meleeAttack && Input.GetAxis("Vertical") > 0 && !charecterController.isGrounded)
         {
+            
             anim.SetBool("UpwardAttackAir", true);
             meleeAnimator.SetTrigger("AttackUpAir");
            
         }
-        if(meleeAttack && Input.GetAxis("Vertical") > 0 && charecterController.isGrounded   )
+        if(meleeAttack && Input.GetAxis("Vertical") > 0 && charecterController.isGrounded  )
         {
+            anim.SetBool("Run", false);
+            meleeAnimator.SetBool("Idle2", false);
             anim.SetBool("UpwardAttack", true);
             meleeAnimator.SetTrigger("AttackUp");
         }
         
             if (meleeAttack && Input.GetAxis("Vertical") < 0 && !charecterController.isGrounded)
         {
+           
             anim.SetBool("DownwardAttack", true);
             meleeAnimator.SetTrigger("AttackDown");
         }
         if(meleeAttack && Input.GetAxis("Vertical") == 0 || meleeAttack && (Input.GetAxis("Vertical") < 0 && charecterController.isGrounded))
         {
+            
             anim.SetBool("ForwardAttack", true);
             meleeAnimator.SetTrigger("AttackSide");
         }
+        if(Input.GetAxis("Horizontal") != 0 && charecterController.isGrounded && meleeAttack == true)
+        {
+            Debug.Log("archer left me");
+            //ResetAnim();
+            
+            //anim.SetBool("UpwardAttack", false);
+            anim.ResetTrigger("AttackUp");
+            anim.SetBool("Run", true);
+            meleeAnimator.SetBool("Idle2",true);
+        }
+        if (Input.GetButtonDown("Jump") && charecterController.isGrounded)
+        {
+            Debug.Log("Archer saved me");
+            ResetAnim();
+            anim.SetBool("Jump", true);
+            meleeAnimator.SetBool("Idle2", true);
+        }
+
     }
 
     private IEnumerator AttackNoAction()
