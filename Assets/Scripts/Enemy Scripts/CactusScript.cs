@@ -22,6 +22,10 @@ public class CactusScript : MonoBehaviour
             StartCoroutine(SpikeSpawnTime(flipSpikeTimer));
         }
     }
+    public void FixedUpdate()
+    {
+        
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //checks if player is touching cactus then checks if it is in "attack mode" then runs the spike spawn enum
