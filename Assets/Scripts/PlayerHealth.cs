@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour
     public Vector2 respawnPoint;
     private meleeAttackManager MeleeAttackManager;
     public bool isOnEnemy;
-    public Collision2D enemyTouching;
+    public GameObject enemyTouching;
     private void Start()
     {
         playerAnimator = GetComponentInChildren<Animator>();
@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isOnEnemy)
         {
-            if (enemyTouching.collider.gameObject.layer == LayerMask.NameToLayer("obstacle"))
+            if (enemyTouching.GetComponent<Collider>().gameObject.layer == LayerMask.NameToLayer("obstacle"))
             {
                 TempHealth -= 1;
             }
@@ -70,7 +70,7 @@ public class PlayerHealth : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D col)
     {
         isOnEnemy = true;
-        enemyTouching = col;
+        enemyTouching = col.gameObject;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
