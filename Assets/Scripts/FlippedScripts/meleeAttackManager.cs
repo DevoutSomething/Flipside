@@ -125,7 +125,7 @@ public class meleeAttackManager : MonoBehaviour
         if (Input.GetButtonDown("Jump") && charecterController.isGrounded)
         {
             Debug.Log("Archer saved me");
-            ResetAnim();
+            //ResetAnim();
             anim.SetBool("Jump", true);
             meleeAnimator.SetBool("Idle2", true);
         }
