@@ -14,6 +14,8 @@ public class PlayerHealth : MonoBehaviour
     public bool death;
     public Vector2 respawnPoint;
     private meleeAttackManager MeleeAttackManager;
+    public bool isOnEnemy;
+    public Collision2D enemyTouching;
     private void Start()
     {
         playerAnimator = GetComponentInChildren<Animator>();
@@ -23,7 +25,14 @@ public class PlayerHealth : MonoBehaviour
     }
     private void Update()
     {
-        if(TempHealth <= 0 && death != true)
+        if (isOnEnemy)
+        {
+            if (enemyTouching.collider.gameObject.layer == LayerMask.NameToLayer("obstacle"))
+            {
+                TempHealth -= 1;
+            }
+        }
+        if (TempHealth <= 0 && death != true)
         {
             death = true;
             StartDeathTimer();
@@ -59,10 +68,13 @@ public class PlayerHealth : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D col)
-    { 
-        if (col.collider.gameObject.layer == LayerMask.NameToLayer("obstacle"))
-        {
-            TempHealth -= 1;
-        }
+    {
+        isOnEnemy = true;
+        enemyTouching = col;
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isOnEnemy = false;
+        enemyTouching = null;
     }
 }

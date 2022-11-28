@@ -44,34 +44,39 @@ public class meleeAttack : MonoBehaviour
     }
     void HandleCollision(enemyHealth objHealth)
     {
-        //processes what kind of thing collided with
-        if(objHealth.giveUpwardForce && Input.GetAxis("Vertical")< 0 && !characterController.isGrounded && objHealth.bounceCollide)
+        //check if object affects vertical momentum then sets variables for collision
+        if (objHealth.giveUpwardForce)
         {
-            bounceMultActive = true;
-            direction = Vector2.up;
-            downwardStrike = true;
-            collided = true;
-        }
-        else if (objHealth.giveUpwardForce && Input.GetAxis("Vertical") < 0 && !characterController.isGrounded)
-        {
-            direction = Vector2.up;
-            downwardStrike = true;
-            collided = true;
-        }
-        else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded && objHealth.bounceCollide)
-        {
-            bounceMultActive = true;
-            direction = Vector2.down;
-            collided = true;
-            UpStrike = true;
-        }
+            if (Input.GetAxis("Vertical") < 0 && !characterController.isGrounded && objHealth.bounceCollide)
+            {
+                bounceMultActive = true;
+                direction = Vector2.up;
+                downwardStrike = true;
+                collided = true;
+            }
+            else if (Input.GetAxis("Vertical") < 0 && !characterController.isGrounded)
+            {
+                direction = Vector2.up;
+                downwardStrike = true;
+                collided = true;
+            }
+            else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded && objHealth.bounceCollide)
+            {
+                bounceMultActive = true;
+                direction = Vector2.down;
+                collided = true;
+                UpStrike = true;
+            }
 
-        else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded)
-        {
-            direction = Vector2.down;
-            collided = true;
-            UpStrike = true;
+            else if (Input.GetAxis("Vertical") > 0 && !characterController.isGrounded)
+            {
+                direction = Vector2.down;
+                collided = true;
+                UpStrike = true;
+            }
+
         }
+        //processes what kind of thing collided with
 
         if ((Input.GetAxis("Vertical") <= 0 && characterController.isGrounded) || Input.GetAxis("Vertical") == 0)
         {
@@ -98,6 +103,7 @@ public class meleeAttack : MonoBehaviour
                 collided = true;
             }
         }
+        //checks if object can take damage then deals damage
         objHealth.Damage(damageAmount);
         if (objHealth.damageable)
         {
@@ -107,6 +113,7 @@ public class meleeAttack : MonoBehaviour
         {
             EnemyHitDie = false;
         }
+        //processes bounce mult
         bounceMult = objHealth.bounceMult;
         if(objHealth.giveDashReset)
         {
@@ -116,6 +123,7 @@ public class meleeAttack : MonoBehaviour
         StartCoroutine(NoLongerColliding());
     }
 
+    //runs check and handles all force application
     private void HandleMovement()
     {
         if (characterController.isGrounded)
