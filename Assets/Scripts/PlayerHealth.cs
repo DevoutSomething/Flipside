@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isOnEnemy)
         {
-            if (enemyTouching.GetComponent<Collider>().gameObject.layer == LayerMask.NameToLayer("obstacle"))
+            if (enemyTouching.GetComponent<BoxCollider2D>().gameObject.layer == LayerMask.NameToLayer("obstacle"))
             {
                 TempHealth -= 1;
             }
