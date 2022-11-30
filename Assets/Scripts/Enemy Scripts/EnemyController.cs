@@ -168,7 +168,7 @@ public class EnemyController : MonoBehaviour
     }
     public void TurnAround()
     {
-        Debug.Log("turn around");
+        //Debug.Log("turn around");
         transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
         if (transform.localScale.x < 0)
         {
@@ -207,7 +207,7 @@ public class EnemyController : MonoBehaviour
     }
     private void Jump()
     {
-        Debug.Log("Jump");
+        //Debug.Log("Jump");
         if (jumpTimer <= 0)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
