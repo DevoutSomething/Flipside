@@ -618,6 +618,10 @@ MonoBehaviour:
   darkenAtStart: 0
   darkenAtStartPlayerLight: 0
   playerLightLimit: 1
+  lowerYLimit: 0
+  upperYLimit: 0
+  lowerXLimit: 0
+  upperXLimit: 0
   cameraPosition: {fileID: 0}
   currentRoom: {fileID: 0}
 --- !u!1 &587062189
@@ -2237,6 +2241,7 @@ MonoBehaviour:
   timeCantAction: 0.1
   canAction: 0
   canAttack: 0
+  Nuke: {fileID: 680314756013675265, guid: d1fc95d8814b840449e949a23527930f, type: 3}
   canTransitionState: 0
   timeCantTransition: 0
 --- !u!1 &1883271745

@@ -15,6 +15,7 @@ public class meleeAttackManager : MonoBehaviour
     public bool canAction;
     public bool canAttack;
     private Animator anim;
+    public GameObject Nuke; 
     
     private CharecterController charecterController;
     private Rigidbody2D rb;
@@ -31,8 +32,11 @@ public class meleeAttackManager : MonoBehaviour
     private void Update()
     {
         CheckInput();
-        
-        
+        /*if (Input.GetButtonUp("Dash"))
+        {
+            Instantiate(Nuke, transform.position, Quaternion.identity);
+        }   */
+
 
     }
     private void CheckInput()
@@ -49,6 +53,7 @@ public class meleeAttackManager : MonoBehaviour
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
             }
+            
         }
         else if (Input.GetButtonDown("Fire2") && canTransitionState)
         {
@@ -128,6 +133,12 @@ public class meleeAttackManager : MonoBehaviour
             //ResetAnim();
             anim.SetBool("Jump", true);
             meleeAnimator.SetBool("Idle2", true);
+        }
+        if (Input.GetButtonUp("Dash") && !charecterController.isGrounded)
+        {
+            anim.SetBool("Jump", false);
+            meleeAnimator.SetBool("Idle2", true);
+
         }
 
     }
