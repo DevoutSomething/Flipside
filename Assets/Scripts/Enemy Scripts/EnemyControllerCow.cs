@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyControllerCow : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
     private BoxCollider2D boxCollider2d;
     [Header("Layers")]
