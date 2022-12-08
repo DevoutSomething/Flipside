@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyControllerCow : MonoBehaviour
+public class EnemyControllerAlpaca : MonoBehaviour
 {
     private BoxCollider2D boxCollider2d;
     [Header("Layers")]
@@ -17,12 +17,10 @@ public class EnemyControllerCow : MonoBehaviour
     public GameObject raySWall;
     public GameObject rayWall;
     public GameObject rayFloor;
-    public GameObject rayPlayer;
     [SerializeField] private bool seeSW;
     [SerializeField] private bool seeW;
     public float floorCheckOfset;
     [Header("Movement")]
-    public float chargeMultiplyer;
     public float speed;
     public float rayDistance;
     private Rigidbody2D rb;
@@ -34,20 +32,13 @@ public class EnemyControllerCow : MonoBehaviour
     [Header("Player")]
     private bool canSeePlayer;
     public float playerSearchDistance;
-    private bool seePlayerR;
-    private bool seePlayerL;
-    [Header("Combat")]
-    [SerializeField] private bool attackMode;
-    public float agroTime;
-    [SerializeField] private float agroTimer;
-
-
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
         turnTimer = 0;
     }
+
     void Update()
     {
         MoveForward();
@@ -60,11 +51,6 @@ public class EnemyControllerCow : MonoBehaviour
             jumpTimer -= Time.deltaTime;
         }
         Checkwalls();
-        LookForPlayer();
-        if (agroTimer <= 0)
-        {
-            attackMode = false;
-        }
     }
     private void Checkwalls()
     {
@@ -125,40 +111,21 @@ public class EnemyControllerCow : MonoBehaviour
         {
             canMoveForward = false;
             Debug.DrawRay(fRayStartPoint, Vector2.down * rayDistance, Color.red);
-            if (!attackMode)
-            {
-                TurnAround();
-                
-            }
-            else
-            {
-                stopMoving = true;
-            }
+            TurnAround();
+            
         }
         #endregion
         #region Reaction
         if (seeW)
         {
             canMoveForward = false;
-            if (!attackMode)
-            {
-                TurnAround();
-            }
-            else
-            {
-                stopMoving = true;
-            }
+            TurnAround();
+            
         }
         if (!seeW && seeSW)
         {
-            if (!attackMode)
-            {
-                Jump();
-            }
-            else
-            {
-                stopMoving = true;
-            }
+            Jump();
+
         }
         #endregion
         if (canMoveForward)
@@ -182,19 +149,7 @@ public class EnemyControllerCow : MonoBehaviour
     }
     private void MoveForward()
     {
-        float moveSpeed;
-        if (attackMode)
-        {
-            moveSpeed = speed * chargeMultiplyer;
-            if (stopMoving)
-            {
-                moveSpeed = 0;
-            }
-        }
-        else
-        {
-            moveSpeed = speed;
-        }
+        float moveSpeed = speed;
         if (facingRight)
         {
             transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
@@ -203,7 +158,7 @@ public class EnemyControllerCow : MonoBehaviour
         {
             transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
         }
-        
+
     }
     private void Jump()
     {
@@ -214,61 +169,5 @@ public class EnemyControllerCow : MonoBehaviour
             jumpTimer = jumpTimerPerm;
         }
     }
-    private void LookForPlayer()
-    {
-        
-        RaycastHit2D raycastHitPlayerR = Physics2D.Raycast(rayPlayer.transform.position, Vector2.right, playerSearchDistance, playerLayer);
-        if (raycastHitPlayerR.collider != null)
-        {
-            Debug.DrawRay(rayPlayer.transform.position, Vector2.right * raycastHitPlayerR.distance, Color.red);
-            seePlayerR = true;
-        }
-        else
-        {
-            Debug.DrawRay(rayPlayer.transform.position, Vector2.right * playerSearchDistance, Color.green);
-            seePlayerR = false;
-        }
-        RaycastHit2D raycastHitPlayerL = Physics2D.Raycast(rayPlayer.transform.position, Vector2.left, playerSearchDistance, playerLayer);
-        if (raycastHitPlayerL.collider != null)
-        {
-            Debug.DrawRay(rayPlayer.transform.position, Vector2.left * raycastHitPlayerL.distance, Color.red);
-            seePlayerL = true;
-        }
-        else
-        {
-            Debug.DrawRay(rayPlayer.transform.position, Vector2.left * playerSearchDistance, Color.green);
-            seePlayerL = false;
-        }
-        if (seePlayerR || seePlayerL)
-        {
-            canSeePlayer = true;
-            attackMode = true;
-            agroTimer = agroTime;
-            if (facingRight && seePlayerL)
-            {
-                TurnAround();
-                if (stopMoving)
-                {
-                    agroTimer -= Time.deltaTime;
-                }
-            }
-            if (!facingRight && seePlayerR)
-            {
-                TurnAround();
-                if (stopMoving)
-                {
-                    agroTimer -= Time.deltaTime;
-                }
-            }
-        }
-        if (!seePlayerL && !seePlayerR)
-        {
-            canSeePlayer = false;
-            if (attackMode && agroTimer > 0)
-            {
-                agroTimer -= Time.deltaTime;
-            }
-        }
-        
-    }
 }
+
