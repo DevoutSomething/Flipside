@@ -1958,6 +1958,7 @@ MonoBehaviour:
   activeTime: 0.5
   flipSpikeTimer: 0.3
   flipSpikeActiveTime: 2
+  MySon: {fileID: 0}
 --- !u!114 &1731707289
 MonoBehaviour:
   m_ObjectHideFlags: 0
