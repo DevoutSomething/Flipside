@@ -40,7 +40,7 @@ public class CharecterController : MonoBehaviour
     public float dashTime;
     private Vector2 dashingDir;
     public bool hasDashedAir;
-
+    public float dashStartTime;
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
@@ -79,9 +79,9 @@ public class CharecterController : MonoBehaviour
         MeleeAttackManager = gameObject.GetComponent<meleeAttackManager>();
         cameraController = Camera.GetComponent<CameraController>();
         playerAnim = gameObject.GetComponentInChildren<Animator>();
-        canDash = true;
         slowDownLength = 2f;
         hasDashedAir = false;
+        canDash = true;
         canResetJump = true;
     }
     private void Update()
@@ -159,12 +159,12 @@ public class CharecterController : MonoBehaviour
 
             if (dashInput && canDash)
             {
+                slowDownLength = 2f;
                 canResetDash = false;
                 canDash = false;
                 isDashing = true;
                 MeleeAttackManager.canAction = false;
-                beginDashSlow();
-
+                StartCoroutine(TimeBeforeSlow());
             }
 
 
@@ -364,5 +364,14 @@ public class CharecterController : MonoBehaviour
         yield return new WaitForSecondsRealtime(.15f);
         canResetJump = true;
     }
+    private IEnumerator TimeBeforeSlow()
+    {
+        yield return new WaitForSecondsRealtime(dashStartTime);
+        if (!isActuallyDashing) {
+            beginDashSlow();
+        }
+
+
+    } 
 }
 
