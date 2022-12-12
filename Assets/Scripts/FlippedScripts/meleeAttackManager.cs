@@ -32,10 +32,7 @@ public class meleeAttackManager : MonoBehaviour
     private void Update()
     {
         CheckInput();
-        /*if (Input.GetButtonUp("Dash"))
-        {
-            Instantiate(Nuke, transform.position, Quaternion.identity);
-        }   */
+       
 
 
     }
@@ -96,7 +93,10 @@ public class meleeAttackManager : MonoBehaviour
             anim.SetBool("UpwardAttackAir", true);
             meleeAnimator.SetTrigger("AttackUpAir");
            
+           
         }
+        
+       
         if(meleeAttack && Input.GetAxis("Vertical") > 0 && charecterController.isGrounded  )
         {
             anim.SetBool("Run", false);
@@ -140,8 +140,20 @@ public class meleeAttackManager : MonoBehaviour
             meleeAnimator.SetBool("Idle2", true);
 
         }
+        if (anim.GetBool("UpwardAttackAir") && charecterController.isGrounded)
+        {
+
+            anim.SetBool("UpwardAttackAir", false);
+            meleeAnimator.ResetTrigger("AttackUpAir");
+            anim.SetBool("Idle", true);
+            meleeAnimator.SetBool("Idle2", true);
+            Debug.Log("help me");
+
+        }
 
     }
+
+    
 
     private IEnumerator AttackNoAction()
     {
