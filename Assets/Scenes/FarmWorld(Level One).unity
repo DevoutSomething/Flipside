@@ -648,7 +648,7 @@ MonoBehaviour:
   dashDiagnalMod: 0.5
   dashTime: 0.15
   hasDashedAir: 0
-  dashStartTime: 0.8
+  dashStartTime: 0.08
   lastTimeGrounded: 0
   isGrounded: 0
   moveDirection: 0
