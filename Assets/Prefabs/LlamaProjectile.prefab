@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6367952027814662933}
   - component: {fileID: -7472202819456458157}
   - component: {fileID: 3508461090217065002}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LlamaProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}

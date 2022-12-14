@@ -35,11 +35,16 @@ public class EnemyControllerAlpaca : MonoBehaviour
     private bool canSeePlayer;
     public float playerSearchDistance;
     public GameObject Projectile;
+    [Header("Shoot")]
+    public float shootTime;
+    private bool canShoot;
+
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
         turnTimer = 0;
+        canShoot = true;
     }
 
     void Update()
@@ -175,7 +180,18 @@ public class EnemyControllerAlpaca : MonoBehaviour
     }
     private void PlayerSearch()
     {
+        if (canShoot)
+        {
+            canShoot = false;
+            StartCoroutine(Shoot());
+        }
+    }
+
+    public IEnumerator Shoot()
+    {
+        yield return new WaitForSecondsRealtime(shootTime);
         Instantiate(Projectile, transform.position, transform.rotation);
+        canShoot = true;
     }
 }
 
