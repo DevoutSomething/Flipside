@@ -30,8 +30,11 @@ public class EnemyControllerAlpaca : MonoBehaviour
     private bool canMoveForward;
     [SerializeField] private bool stopMoving;
     [Header("Player")]
+    public GameObject player;
+    public GameObject rayPlayer;
     private bool canSeePlayer;
     public float playerSearchDistance;
+    public GameObject Projectile;
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -51,6 +54,7 @@ public class EnemyControllerAlpaca : MonoBehaviour
             jumpTimer -= Time.deltaTime;
         }
         Checkwalls();
+        PlayerSearch();
     }
     private void Checkwalls()
     {
@@ -168,6 +172,10 @@ public class EnemyControllerAlpaca : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jumpTimer = jumpTimerPerm;
         }
+    }
+    private void PlayerSearch()
+    {
+        Instantiate(Projectile, transform.position, transform.rotation);
     }
 }
 
