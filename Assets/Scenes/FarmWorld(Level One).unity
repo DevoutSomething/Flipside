@@ -1511,6 +1511,8 @@ MonoBehaviour:
   player: {fileID: 838931732}
   rayPlayer: {fileID: 93461004}
   playerSearchDistance: 0
+  Projectile: {fileID: 8024659129172460171, guid: e767019f7f228a14d8f5f0617bf63e37, type: 3}
+  shootTime: 2
 --- !u!50 &990242421
 Rigidbody2D:
   serializedVersion: 4
