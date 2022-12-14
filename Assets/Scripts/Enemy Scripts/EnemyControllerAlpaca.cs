@@ -35,6 +35,7 @@ public class EnemyControllerAlpaca : MonoBehaviour
     private bool canSeePlayer;
     public float playerSearchDistance;
     public GameObject Projectile;
+    public float radius;
     [Header("Shoot")]
     public float shootTime;
     private bool canShoot;
@@ -190,8 +191,23 @@ public class EnemyControllerAlpaca : MonoBehaviour
     public IEnumerator Shoot()
     {
         yield return new WaitForSecondsRealtime(shootTime);
+        RaycastHit2D circleCast = Physics2D.CircleCast(transform.position, radius, Vector2.up, playerLayer);
+        if (circleCast.collider != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, radius);
+        }
+        else
+        {
+            
+        }
         Instantiate(Projectile, transform.position, transform.rotation);
         canShoot = true;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position, radius);
     }
 }
 
