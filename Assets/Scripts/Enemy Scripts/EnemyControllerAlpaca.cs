@@ -30,13 +30,21 @@ public class EnemyControllerAlpaca : MonoBehaviour
     private bool canMoveForward;
     [SerializeField] private bool stopMoving;
     [Header("Player")]
-    private bool canSeePlayer;
-    public float playerSearchDistance;
+    public GameObject player;
+    public GameObject rayPlayer;
+    [SerializeField] private bool canSeePlayer;
+    public GameObject Projectile;
+    public float playerSearchRange;
+    [Header("Shoot")]
+    public float shootTime;
+    private bool canShoot;
+
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         boxCollider2d = transform.GetComponent<BoxCollider2D>();
         turnTimer = 0;
+        canShoot = true;
     }
 
     void Update()
@@ -51,6 +59,11 @@ public class EnemyControllerAlpaca : MonoBehaviour
             jumpTimer -= Time.deltaTime;
         }
         Checkwalls();
+        LookForPlayer();
+        if (canSeePlayer)
+        {
+            PlayerSearch();
+        }
     }
     private void Checkwalls()
     {
@@ -167,6 +180,46 @@ public class EnemyControllerAlpaca : MonoBehaviour
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jumpTimer = jumpTimerPerm;
+        }
+    }
+    private void PlayerSearch()
+    {
+        if (canShoot)
+        {
+            canShoot = false;
+            StartCoroutine(Shoot());
+        }
+    }
+
+    public IEnumerator Shoot()
+    {
+        yield return new WaitForSecondsRealtime(shootTime);
+        Instantiate(Projectile, transform.position, transform.rotation);
+        canShoot = true;
+    }
+    private void LookForPlayer()
+    {
+        float newPlayerSearchRange;
+        Vector2 DirectionToTarget = (player.transform.position - rayPlayer.transform.position).normalized;
+        RaycastHit2D raycastHitFOV = Physics2D.Raycast(rayPlayer.transform.position, DirectionToTarget, playerSearchRange, groundLayer);
+        if (raycastHitFOV.collider != null)
+        {
+            newPlayerSearchRange = raycastHitFOV.distance;
+        }
+        else
+        {
+            newPlayerSearchRange = playerSearchRange;
+        }
+        RaycastHit2D raycastHitP = Physics2D.Raycast(rayPlayer.transform.position, DirectionToTarget, newPlayerSearchRange, playerLayer);
+        if (raycastHitP.collider != null)
+        {
+            Debug.DrawRay(rayPlayer.transform.position, DirectionToTarget * raycastHitP.distance, Color.red);
+            canSeePlayer = true;
+        }
+        else
+        {
+            Debug.DrawRay(rayPlayer.transform.position, DirectionToTarget * newPlayerSearchRange, Color.green);
+            canSeePlayer = false;
         }
     }
 }

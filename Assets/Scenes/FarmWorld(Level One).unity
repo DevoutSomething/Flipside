@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &93461004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 93461005}
+  m_Layer: 0
+  m_Name: Player Ray
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &93461005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93461004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.154, y: 0.185, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 990242419}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &217380321
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,7 +679,7 @@ MonoBehaviour:
   dashDiagnalMod: 0.5
   dashTime: 0.15
   hasDashedAir: 0
-  dashStartTime: 0.8
+  dashStartTime: 0.08
   lastTimeGrounded: 0
   isGrounded: 0
   moveDirection: 0
@@ -1440,6 +1471,7 @@ Transform:
   - {fileID: 1274161338}
   - {fileID: 1464431645}
   - {fileID: 221093045}
+  - {fileID: 93461005}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1476,7 +1508,12 @@ MonoBehaviour:
   jumpForce: 8
   jumpTimerPerm: 1
   stopMoving: 0
+  player: {fileID: 838931732}
+  rayPlayer: {fileID: 93461004}
   playerSearchDistance: 0
+  Projectile: {fileID: 8024659129172460171, guid: e767019f7f228a14d8f5f0617bf63e37, type: 3}
+  radius: 2
+  shootTime: 2
 --- !u!50 &990242421
 Rigidbody2D:
   serializedVersion: 4
