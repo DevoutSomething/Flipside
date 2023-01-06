@@ -32,9 +32,9 @@ public class EnemyControllerAlpaca : MonoBehaviour
     [Header("Player")]
     public GameObject player;
     public GameObject rayPlayer;
-    private bool canSeePlayer;
-    public float playerSearchDistance;
+    [SerializeField] private bool canSeePlayer;
     public GameObject Projectile;
+    public float playerSearchRange;
     [Header("Shoot")]
     public float shootTime;
     private bool canShoot;
@@ -59,7 +59,11 @@ public class EnemyControllerAlpaca : MonoBehaviour
             jumpTimer -= Time.deltaTime;
         }
         Checkwalls();
-        PlayerSearch();
+        LookForPlayer();
+        if (canSeePlayer)
+        {
+            PlayerSearch();
+        }
     }
     private void Checkwalls()
     {
@@ -192,6 +196,31 @@ public class EnemyControllerAlpaca : MonoBehaviour
         yield return new WaitForSecondsRealtime(shootTime);
         Instantiate(Projectile, transform.position, transform.rotation);
         canShoot = true;
+    }
+    private void LookForPlayer()
+    {
+        float newPlayerSearchRange;
+        Vector2 DirectionToTarget = (player.transform.position - rayPlayer.transform.position).normalized;
+        RaycastHit2D raycastHitFOV = Physics2D.Raycast(rayPlayer.transform.position, DirectionToTarget, playerSearchRange, groundLayer);
+        if (raycastHitFOV.collider != null)
+        {
+            newPlayerSearchRange = raycastHitFOV.distance;
+        }
+        else
+        {
+            newPlayerSearchRange = playerSearchRange;
+        }
+        RaycastHit2D raycastHitP = Physics2D.Raycast(rayPlayer.transform.position, DirectionToTarget, newPlayerSearchRange, playerLayer);
+        if (raycastHitP.collider != null)
+        {
+            Debug.DrawRay(rayPlayer.transform.position, DirectionToTarget * raycastHitP.distance, Color.red);
+            canSeePlayer = true;
+        }
+        else
+        {
+            Debug.DrawRay(rayPlayer.transform.position, DirectionToTarget * newPlayerSearchRange, Color.green);
+            canSeePlayer = false;
+        }
     }
 }
 
