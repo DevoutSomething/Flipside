@@ -4400,7 +4400,7 @@ GameObject:
   - component: {fileID: 1899318631}
   - component: {fileID: 1899318630}
   m_Layer: 0
-  m_Name: 889b86dfb255824f611c12f367f69cb6
+  m_Name: sky
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
