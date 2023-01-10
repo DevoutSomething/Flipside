@@ -35,6 +35,7 @@ public class SaveFunction : MonoBehaviour
         playerData.Level4 = data.Level4;
         playerData.Level5 = data.Level5;
         playerData.Level6 = data.Level6;
+        playerData.checkpoint = data.checkpoint;
     }
 }
 

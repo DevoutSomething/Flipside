@@ -32,7 +32,7 @@ public static class SaveSystem
         }
         else
         {
-            Debug.LogError("Sace file not found in" + path);
+            Debug.LogError("Space file not found in" + path);
             return null;
         }
     }

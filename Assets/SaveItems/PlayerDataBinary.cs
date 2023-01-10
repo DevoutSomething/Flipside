@@ -11,6 +11,8 @@ public class PlayerDataBinary
     public bool Level4;
     public bool Level5;
     public bool Level6;
+    public int checkpoint;
+
 
     public PlayerDataBinary (PlayerDataManager Player)
     {
@@ -20,5 +22,6 @@ public class PlayerDataBinary
         Level4 = Player.Level4;
         Level5 = Player.Level5;
         Level6 = Player.Level6;
+        checkpoint = Player.checkpoint;
     }
 }
