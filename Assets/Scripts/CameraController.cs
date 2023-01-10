@@ -86,23 +86,26 @@ public class CameraController : MonoBehaviour
         #region camera follow
         if (!changingRooms)
         {
+            float camHeight = camera.orthographicSize;
+            float camWidth = camera.orthographicSize * camera.aspect;
             Vector3 targetPosition = Player.transform.position + offset;
-            if (targetPosition.x > upperXLimit)
+            if (targetPosition.x < lowerXLimit + camWidth)
             {
-                targetPosition.x = upperXLimit;
+                targetPosition.x = lowerXLimit + camWidth;
             }
-            if (targetPosition.x < lowerXLimit)
+            if (targetPosition.x > upperXLimit - camWidth)
             {
-                targetPosition.x = lowerXLimit;
+                targetPosition.x = upperXLimit - camWidth;
             }
-            if (targetPosition.y > upperYLimit)
+            if (targetPosition.y < lowerYLimit + camHeight)
             {
-                targetPosition.y = upperYLimit;
+                targetPosition.y = lowerYLimit + camHeight;
             }
-            if (targetPosition.y < lowerYLimit)
+            if (targetPosition.y > upperYLimit - camHeight)
             {
-                targetPosition.y = lowerYLimit;
+                targetPosition.y = upperYLimit - camHeight;
             }
+           
             Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             transform.position = smoothPosition;
         }

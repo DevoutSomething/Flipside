@@ -66,4 +66,11 @@ public class PlayerHealth : MonoBehaviour
             TempHealth -= 1;
         }
     }
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.layer == LayerMask.NameToLayer("obstacle"))
+        {
+            TempHealth -= 1;
+        }
+    }
 }
