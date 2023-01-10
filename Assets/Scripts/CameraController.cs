@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
-{ 
+{
     public GameObject Player;
     public Light PlayerLight;
     public Light CameraLight;
@@ -44,14 +44,12 @@ public class CameraController : MonoBehaviour
     private bool changingRooms;
     private Camera camera;
 
-   
-    
+
+
     void Start()
     {
         camera = gameObject.GetComponent<Camera>();
-       // SetRoom(startingRoom);
         SetCameraSize(baseCameraSize);
-       
     }
 
     void Update()
@@ -105,7 +103,7 @@ public class CameraController : MonoBehaviour
             {
                 targetPosition.y = upperYLimit - camHeight;
             }
-           
+
             Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             transform.position = smoothPosition;
         }
@@ -132,33 +130,5 @@ public class CameraController : MonoBehaviour
     {
         camera.orthographicSize = size;
     }
-    private Vector3 ClampCamera (Vector3 cameraTarget)
-    {
-        float camHeight = camera.orthographicSize / 2;
-        float camWidth = camera.orthographicSize * camera.aspect / 2;
-        float maxX = roomMaxX - camWidth;
-        float minX = roomMinX + camWidth;
-        float maxY = roomMaxY - camHeight;
-        float minY = roomMinY + camHeight;
 
-        float newX = Mathf.Clamp(cameraTarget.x, minX, maxX);
-        float newY = Mathf.Clamp(cameraTarget.y, minY, maxY);
-
-        return new Vector3(newX, newY, cameraTarget.z);
-    }
-    public void SetRoom(Transform room)
-    {
-        currentRoom = room;
-        #region findEdgeOfRoom
-        SpriteRenderer sRenderer = currentRoom.GetComponent<SpriteRenderer>();
-        roomMaxX = (sRenderer.transform.position.x + sRenderer.bounds.size.x) /2;
-        roomMinX = (sRenderer.transform.position.x - sRenderer.bounds.size.x) /2;
-        roomMaxY = (sRenderer.transform.position.y + sRenderer.bounds.size.y) /2;
-        roomMinY = (sRenderer.transform.position.y - sRenderer.bounds.size.y) /2;
-        Debug.Log("X max " + roomMaxX);
-        Debug.Log("Y max " + roomMaxY);
-        Debug.Log("X min " + roomMinX);
-        Debug.Log(" min " + roomMinY);
-        #endregion
-    }
 }

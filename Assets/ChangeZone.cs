@@ -24,13 +24,15 @@ public class ChangeZone : MonoBehaviour
             Camera.GetComponent<CameraController>().upperXLimit = camRestrictRightXUpY.position.x;
             Camera.GetComponent<CameraController>().lowerYLimit = camRestrictLeftxDownY.position.y;
             Camera.GetComponent<CameraController>().upperYLimit = camRestrictRightXUpY.position.y;
+            player.GetComponent<PlayerHealth>().respawnPoint = new Vector2(zoneRespawnLocation.position.x, zoneRespawnLocation.position.y);
+
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
        if (collision.gameObject.name == "player" && inZone)
         {
-            player.GetComponent<PlayerHealth>().respawnPoint = new Vector2 (zoneRespawnLocation.position.x, zoneRespawnLocation.position.y);
+            Debug.Log(" Collide with gate");
             changeZone.inZone = true;
             inZone = false;
             Destroy(gameObject);

@@ -138,7 +138,7 @@ public class meleeAttackManager : MonoBehaviour
         {
 
             resetBadAnim();
-            Debug.Log("help me");
+          //  Debug.Log("help me");
 
         }
 
