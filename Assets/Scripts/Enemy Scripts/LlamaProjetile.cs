@@ -22,4 +22,11 @@ public class LlamaProjetile : MonoBehaviour
     {
         
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("obstacle") || collision.gameObject.layer == LayerMask.NameToLayer("ground"))
+        {
+            Destroy(gameObject);
+        }
+    }
 }
