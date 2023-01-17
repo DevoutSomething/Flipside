@@ -14,8 +14,5 @@ public class PlayerDataManager : MonoBehaviour
     public bool Level6;
     [Header("Level 1")]
     public int checkpoint;
-    public void SavePlayer()
-    {
-        SaveSystem.SavePlayer(this);
-    }
+ 
 }
