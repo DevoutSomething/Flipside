@@ -30,4 +30,9 @@ public class enemyHealth : MonoBehaviour
             }
         }
     }
+    public void PlayerDied()
+    {
+        currentHealth = health;
+        gameObject.SetActive(true);
+    }
 }

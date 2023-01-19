@@ -24,6 +24,7 @@ public class meleeAttack : MonoBehaviour
     private bool UpStrike;
     private bool Side1;
     private GameObject gameManager;
+    public List<GameObject> enemiesKilled;
 
 
     private void Start()
@@ -44,6 +45,7 @@ public class meleeAttack : MonoBehaviour
         if (collision.GetComponent<enemyHealth>())
         {
             HandleCollision(collision.GetComponent<enemyHealth>());
+            enemiesKilled.Add(collision.gameObject);
         }
     }
     void HandleCollision(enemyHealth objHealth)
