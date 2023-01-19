@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float zoomSpeed;
     public float baseCameraSize;
+    public float WantedCamSize;
     public float zoomLimit;
     [Header("Dash")]
     public bool currentDashing;
@@ -49,7 +50,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         camera = gameObject.GetComponent<Camera>();
-        SetCameraSize(baseCameraSize);
+        camera.orthographicSize = baseCameraSize;
     }
 
     void Update()
@@ -78,6 +79,10 @@ public class CameraController : MonoBehaviour
         }
 
         #endregion
+        if (camera.orthographicSize != WantedCamSize)
+        {
+            SetCameraSize(WantedCamSize);
+        }
     }
     private void FixedUpdate()
     {
@@ -126,9 +131,17 @@ public class CameraController : MonoBehaviour
         SetCameraSize(baseCameraSize);
     }
     #endregion
-    public void SetCameraSize(float size)
+    public void SetCameraSize(float targetSize)
     {
-        camera.orthographicSize = size;
+        camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, targetSize, Time.deltaTime * zoomSpeed);
+        if (camera.orthographicSize >= targetSize - 0.05 && camera.orthographicSize < targetSize)
+        {
+            camera.orthographicSize = targetSize;
+        }
+        if (camera.orthographicSize <= targetSize + 0.05 && camera.orthographicSize > targetSize)
+        {
+            camera.orthographicSize = targetSize;
+        }
     }
 
 }

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class meleeAttack : MonoBehaviour
 {
-    //archer fucked up
-    //archer fucked up again
+
     [SerializeField]
     private int damageAmount = 1;
     [SerializeField] private Rigidbody2D rb;
@@ -23,12 +22,17 @@ public class meleeAttack : MonoBehaviour
     public float upForceOnSide;
     private bool EnemyHitDie;
     private bool UpStrike;
+    private bool Side1;
+    private GameObject gameManager;
+
 
     private void Start()
     {
         characterController = GetComponentInParent<CharecterController>();
         rb = GetComponentInParent<Rigidbody2D>();
         MeleeAttackManager = GetComponentInParent<meleeAttackManager>();
+        gameManager = GameObject.Find("GameManager");
+
     }
     private void FixedUpdate()
     {
