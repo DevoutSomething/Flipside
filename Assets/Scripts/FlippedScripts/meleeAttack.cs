@@ -40,6 +40,7 @@ public class meleeAttack : MonoBehaviour
         if (collision.GetComponent<enemyHealth>())
         {
             HandleCollision(collision.GetComponent<enemyHealth>());
+            enemiesKilled.Add(collision.gameObject);
         }
     }
     void HandleCollision(enemyHealth objHealth)

@@ -39,7 +39,7 @@ public class EnemyControllerAlpaca : MonoBehaviour
     public float shootTime;
     private bool canShoot;
 
-    private void Start()
+    private void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         boxCollider2d = transform.GetComponent<BoxCollider2D>();

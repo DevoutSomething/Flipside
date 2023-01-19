@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     public bool death;
     public Vector2 respawnPoint;
     private meleeAttackManager MeleeAttackManager;
+    public GameObject attackManagerObject;
     
     private void Start()
     {
@@ -57,6 +58,11 @@ public class PlayerHealth : MonoBehaviour
         gameObject.transform.position = respawnPoint;
         TempHealth = 1;
         MeleeAttackManager.canAction = true;
+        GameObject[] enemies = attackManagerObject.GetComponent<meleeAttack>().enemiesKilled.ToArray();
+        foreach (GameObject Enemy in enemies)
+        {
+        Enemy.GetComponent<enemyHealth>().PlayerDied();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D col)
