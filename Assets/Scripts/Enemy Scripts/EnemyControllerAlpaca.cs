@@ -194,7 +194,7 @@ public class EnemyControllerAlpaca : MonoBehaviour
     public IEnumerator Shoot()
     {
         yield return new WaitForSecondsRealtime(shootTime);
-        Instantiate(Projectile, rayPlayer.transform.position, transform.rotation);
+        Instantiate(Projectile, transform.position, transform.rotation);
         canShoot = true;
     }
     private void LookForPlayer()

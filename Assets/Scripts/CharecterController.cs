@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class CharecterController : MonoBehaviour
 {
-    private GameObject gameManager;
+
+    //archer fucked up
+    //archer fucked up again
     public bool colideWithTilemap;
     [Header("Speed")]
     public float moveSpeed;
@@ -39,7 +41,6 @@ public class CharecterController : MonoBehaviour
     private Vector2 dashingDir;
     public bool hasDashedAir;
     public float dashStartTime;
-    private bool Side1;
 
     [Header("Private")]
     [SerializeField] private float lastTimeGrounded;
@@ -82,70 +83,42 @@ public class CharecterController : MonoBehaviour
         hasDashedAir = false;
         canDash = true;
         canResetJump = true;
-        gameManager = GameObject.Find("GameManager");
     }
     private void Update()
     {
-        if (gameManager.GetComponent<GameManager>().isFlipped == false)
-        {
-            Side1 = true;
-        }
-        else
-        {
-            Side1 = false;
-        }
         groundCheck();
-        if (Side1)
+        var dashInput = Input.GetButtonDown("Dash");
+        var dashInputUp = Input.GetButtonUp("Dash");
+        if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
         {
-            #region Dashing
-            var dashInput = Input.GetButtonDown("Dash");
-            var dashInputUp = Input.GetButtonUp("Dash");
-            if (isDashing && dashInputUp || slowDownLength <= 0 && isDashing)
-            {
-                hasDashedAir = true;
-                slowDownLength = 2;
-                isDashing = false;
-                isActuallyDashing = true;
-                dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            hasDashedAir = true;
+            slowDownLength = 2;
+            isDashing = false;
+            isActuallyDashing = true;
+            dashingDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-                if (dashingDir == Vector2.zero)
+            if (dashingDir == Vector2.zero)
+            {
+                if (FacingRight)
                 {
-                    if (FacingRight)
-                    {
-                        dashingDir = new Vector2(1, 0);
-                    }
-                    else
-                    {
-                        dashingDir = new Vector2(-1, 0);
-                    }
+                    dashingDir = new Vector2(1, 0);
                 }
-                timeManager.ResetTime();
-                cameraController.FinishedDash();
-                isDashing = false;
-                slowDownLength = 2f;
-                StartCoroutine(StopDashing());
-                //add dash stop
+                else
+                {
+                    dashingDir = new Vector2(-1, 0);
+                }
             }
-            if (isActuallyDashing)
-            {
-                rb.velocity = dashingDir.normalized * dashSpeed;
-                return;
-            }
-
-            if (dashInput && canDash)
-            {
-                slowDownLength = 2f;
-                canResetDash = false;
-                canDash = false;
-                isDashing = true;
-                MeleeAttackManager.canAction = false;
-                StartCoroutine(TimeBeforeSlow());
-            }
-
-
-
-
-            #endregion
+            timeManager.ResetTime();
+            cameraController.FinishedDash();
+            isDashing = false;
+            slowDownLength = 2f;
+            StartCoroutine(StopDashing());
+            //add dash stop
+        }
+        if (isActuallyDashing)
+        {
+            rb.velocity = dashingDir.normalized * dashSpeed;
+            return;
         }
         if (MeleeAttackManager.canAction && MeleeAttackManager.canAttack)
         {
@@ -182,7 +155,22 @@ public class CharecterController : MonoBehaviour
                 lastTimeGrounded += Time.deltaTime;
             }
 
- 
+            #region Dashing
+
+            if (dashInput && canDash)
+            {
+                slowDownLength = 2f;
+                canResetDash = false;
+                canDash = false;
+                isDashing = true;
+                MeleeAttackManager.canAction = false;
+                StartCoroutine(TimeBeforeSlow());
+            }
+
+
+
+
+            #endregion
             #region Jump
   
             if (Input.GetButtonDown("Jump") && lastTimeGrounded < CoyoteTime && !isJumping && jumpBufferTemp <= 0 && !isActuallyDashing && canJump || Input.GetButtonDown("Jump") && isGrounded && lastTimeGrounded < CoyoteTime && !isJumping && canJump)
