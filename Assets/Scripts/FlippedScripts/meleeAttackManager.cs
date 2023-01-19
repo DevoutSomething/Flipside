@@ -60,7 +60,7 @@ public class meleeAttackManager : MonoBehaviour
             bool upAttack = anim.GetBool("UpwardAttack");
             bool upAttackAir = anim.GetBool("UpwardAttackAir");
             bool jump = anim.GetBool("Jump");
-            bool run = anim.GetBool("Run");
+            bool run = anim.GetBool("run");
             bool sideDash = anim.GetBool("SideDash");
             bool upDash = anim.GetBool("UpDash");
             bool downDash = anim.GetBool("DownDash");
@@ -132,7 +132,7 @@ public class meleeAttackManager : MonoBehaviour
 
             // anim.SetBool("UpwardAttack", false);
             anim.ResetTrigger("UpwardAttack");
-            anim.SetBool("Run", true);
+            anim.SetBool("run", true);
             //meleeAnimator.SetBool("Idle2",true);
         }
         if (Input.GetButtonDown("Jump") && charecterController.isGrounded)
@@ -158,12 +158,12 @@ public class meleeAttackManager : MonoBehaviour
         if(Input.GetButtonUp("Dash") && Input.GetAxis("Vertical") == 0 )
         {
             Debug.Log("dash");
-            anim.SetBool("SideDash", true);     //TURN INTO TRIGGER
+            anim.SetTrigger("SideDash");     //TURN INTO TRIGGER
         }
-        if (Input.GetButtonUp("Dash") && Input.GetAxis("Horizontal") > 0 )
+        if (Input.GetButtonUp("Dash") && Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") > 0)
         {
             Debug.Log("dash2");
-            anim.SetBool("SideDash", true);
+            anim.SetTrigger("SideDash");
         }
 
 

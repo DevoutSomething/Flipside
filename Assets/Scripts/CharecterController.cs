@@ -134,12 +134,12 @@ public class CharecterController : MonoBehaviour
 
             if (isGrounded && Input.GetAxis("Horizontal") != 0)
             {
-                playerAnim.SetBool("Run", true);
+                playerAnim.SetBool("run", true);
                 playerAnim.SetBool("Jump", false);
             }
             else
             {
-                playerAnim.SetBool("Run", false);
+                playerAnim.SetBool("run", false);
             }
             if (!isGrounded && isJumping)
             {
